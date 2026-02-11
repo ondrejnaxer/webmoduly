@@ -275,10 +275,8 @@ function renderList(){
       if(act === "promote") promote(menu.items, idxNow);
       if(act === "demote") demote(menu.items, idxNow);
       if(act === "remove"){
-        if(confirm(`Odebrat položku "${item.title || "(bez názvu)"}" včetně podřízených?`)){
-          const end = blockEnd(menu.items, idxNow);
-          menu.items.splice(idxNow, end-idxNow+1);
-        } else return;
+        const end = blockEnd(menu.items, idxNow);
+        menu.items.splice(idxNow, end-idxNow+1);
       }
       renderList();
     });
@@ -397,22 +395,14 @@ function buildPreviewTree(items){
   return root;
 }
 
-function renderPreviewMenu(nodes, level=0){
+function renderPreviewMenu(nodes){
   if(nodes.length === 0) return "";
-  const isTop = level === 0;
-  const listStyle = isTop
-    ? "display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin:0;padding:0;list-style:none;"
-    : "margin:8px 0 0;padding:0;list-style:none;display:grid;gap:8px;";
 
-  return `<ul style="${listStyle}">${nodes.map(node=>{
-    const itemStyle = isTop
-      ? "min-width:180px;background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px;"
-      : "margin-left:16px;background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:8px 10px;";
-
-    return `<li style="${itemStyle}">
-      <a href="${escapeAttr(node.url || "#")}" style="color:#2271b1;text-decoration:none;font-weight:600;display:inline-block;">${escapeHtml(node.title || "(bez názvu)")}</a>
-      <div style="margin-top:4px;font-size:12px;color:#646970;">${escapeHtml(node.url || "#")}</div>
-      ${renderPreviewMenu(node.children, level + 1)}
+  return `<ul class="preview-menu-list">${nodes.map(node=>{
+    const child = node.children.length ? `<div class="preview-submenu">${renderPreviewMenu(node.children)}</div>` : "";
+    return `<li class="preview-menu-item">
+      <a href="${escapeAttr(node.url || "#")}" class="preview-link">${escapeHtml(node.title || "(bez názvu)")}</a>
+      ${child}
     </li>`;
   }).join("")}</ul>`;
 }
@@ -437,7 +427,20 @@ $("#previewBtn").addEventListener("click", ()=>{
 </head>
 <body style="margin:0;padding:20px;background:#f0f2f5;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1d2327;">
   <h1 style="margin:0 0 14px;font-size:22px;">Náhled: ${escapeHtml(menu.name)}</h1>
-  ${rows || '<div style="color:#646970;">Menu je prázdné.</div>'}
+  <nav class="preview-nav">${rows || '<div style="color:#646970;">Menu je prázdné.</div>'}</nav>
+
+  <style>
+    .preview-nav{background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:0 12px;overflow:visible;}
+    .preview-menu-list{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:4px;}
+    .preview-menu-item{position:relative;}
+    .preview-link{display:block;padding:14px 12px;color:#1d2327;text-decoration:none;font-weight:600;white-space:nowrap;}
+    .preview-link:hover{background:#f0f2f5;color:#2271b1;}
+    .preview-submenu{display:none;position:absolute;left:0;top:100%;min-width:220px;background:#fff;border:1px solid #dcdcde;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:6px;z-index:20;}
+    .preview-submenu .preview-menu-list{display:block;}
+    .preview-submenu .preview-link{padding:10px 12px;font-weight:500;}
+    .preview-menu-item:hover > .preview-submenu{display:block;}
+    .preview-submenu .preview-submenu{left:100%;top:0;}
+  </style>
 </body>
 </html>`);
   popup.document.close();

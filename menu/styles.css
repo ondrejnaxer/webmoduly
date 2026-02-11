@@ -101,6 +101,7 @@ select:focus, input:focus{
 /* Menu items */
 .list{
   background:transparent;
+  max-width:880px;
 }
 .menu-item{
   background:var(--panel);
@@ -109,7 +110,8 @@ select:focus, input:focus{
   box-shadow:var(--shadow);
   margin:10px 0;
   margin-left:calc(var(--lvl, 0) * var(--indent));
-  width:calc(100% - var(--lvl, 0) * var(--indent));
+  width:min(100%, calc(100% - var(--lvl, 0) * var(--indent)));
+  max-width:860px;
   overflow:hidden;
 }
 .menu-item.dragging{
@@ -172,7 +174,7 @@ select:focus, input:focus{
 .menu-item.open .details{ display:block; }
 .grid{
   display:grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap:12px;
 }
 .grid .full{ grid-column:1 / -1; }
@@ -217,20 +219,6 @@ select:focus, input:focus{
 }
 .drop-hint.show{ display:block; }
 
-/* Footer preview */
-.footer{
-  margin-top:18px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:14px;
-}
-.small{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:2px;
-}
 
 /* Toast */
 .toast{
