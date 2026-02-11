@@ -182,6 +182,29 @@ function escapeHtml(str){
 }
 function escapeAttr(str){ return escapeHtml(str).replaceAll("\\n"," "); }
 
+function sanitizePreviewHref(url){
+  const value = String(url ?? "").trim();
+  if(!value) return "#";
+
+  const isRelative = value.startsWith("/")
+    || value.startsWith("./")
+    || value.startsWith("../")
+    || value.startsWith("?")
+    || value.startsWith("#");
+
+  if(isRelative) return value;
+
+  const hasScheme = /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(value);
+  if(!hasScheme) return value;
+
+  try{
+    const { protocol } = new URL(value);
+    if(protocol === "http:" || protocol === "https:") return value;
+  }catch(e){}
+
+  return "#";
+}
+
 function renderList(){
   const menu = getActiveMenu();
   const list = $("#list");
@@ -401,7 +424,7 @@ function renderPreviewMenu(nodes){
   return `<ul class="preview-menu-list">${nodes.map(node=>{
     const child = node.children.length ? `<div class="preview-submenu">${renderPreviewMenu(node.children)}</div>` : "";
     return `<li class="preview-menu-item">
-      <a href="${escapeAttr(node.url || "#")}" class="preview-link">${escapeHtml(node.title || "(bez názvu)")}</a>
+      <a href="${escapeAttr(sanitizePreviewHref(node.url))}" class="preview-link">${escapeHtml(node.title || "(bez názvu)")}</a>
       ${child}
     </li>`;
   }).join("")}</ul>`;
