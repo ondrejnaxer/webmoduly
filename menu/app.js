@@ -499,7 +499,7 @@ function renderPreviewMenu(nodes){
   return `<ul class="preview-menu-list">${nodes.map(node => {
     const hasChildren = node.children.length > 0;
     return `<li class="preview-menu-item">
-      <a href="${escapeAttr(sanitizePreviewHref(node.url))}" class="preview-link">
+      <a href="${escapeAttr(sanitizePreviewHref(node.url))}" class="preview-link" target="_blank" rel="noopener noreferrer">
         <span>${escapeHtml(node.title || "(bez názvu)")}</span>
         ${hasChildren ? '<span class="preview-marker">▾</span>' : ''}
       </a>
