@@ -116,6 +116,8 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       margin:10px 0;
+      margin-left:calc(var(--lvl, 0) * var(--indent));
+      width:calc(100% - var(--lvl, 0) * var(--indent));
       overflow:hidden;
     }
     .menu-item.dragging{
@@ -129,7 +131,6 @@
       gap:10px;
       padding:var(--rowpad);
       cursor:grab;
-      user-select:none;
     }
     .menu-item .head:active{ cursor:grabbing; }
     .title{
@@ -224,15 +225,7 @@
     }
     .drop-hint.show{ display:block; }
 
-    /* Indentation */
-    .indent{
-      padding-left: calc(var(--rowpad) + var(--lvl) * var(--indent));
-    }
-    .indent.details-pad{
-      padding-left: calc(14px + var(--lvl) * var(--indent));
-    }
-
-    /* Footer export */
+    /* Footer preview */
     .footer{
       margin-top:18px;
       background:var(--panel);
@@ -241,20 +234,10 @@
       box-shadow:var(--shadow);
       padding:14px;
     }
-    textarea{
-      width:100%;
-      min-height:140px;
-      resize:vertical;
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:10px;
-      font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      font-size:12px;
-    }
     .small{
       color:var(--muted);
       font-size:12px;
-      margin-top:8px;
+      margin-top:2px;
     }
 
     /* Toast */
@@ -302,13 +285,10 @@
     <div id="list" class="list"></div>
 
     <div class="footer">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
-        <button class="btn" id="exportBtn">Export JSON</button>
-        <button class="btn" id="copyBtn">Kopírovat JSON</button>
-        <span class="small">Export je pouze pro náhled / integraci (žádný back‑end).</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="btn" id="previewBtn">Náhled menu</button>
       </div>
-      <textarea id="exportArea" spellcheck="false" placeholder="Zde se zobrazí export menu jako JSON…"></textarea>
-      <div class="small">Tip: data se ukládají do <code>localStorage</code> v prohlížeči (stejné zařízení/prohlížeč).</div>
+      <div class="small">Náhled se otevře v novém popup okně. Data se ukládají do <code>localStorage</code> v prohlížeči (stejné zařízení/prohlížeč).</div>
     </div>
   </div>
 
@@ -437,9 +417,10 @@
     }
 
     function moveDown(items, idx){
-      const next = findNextSibling(items, idx);
+      let next = findNextSibling(items, idx);
       if(next < 0) return;
       const block = extractBlock(items, idx);
+      if(idx < next) next -= block.length;
       const nextEnd = blockEnd(items, next);
       insertBlock(items, nextEnd + 1, block);
     }
@@ -510,12 +491,13 @@
       menu.items.forEach((item, idx)=>{
         const card = document.createElement("div");
         card.className = "menu-item" + (item.open ? " open" : "");
-        card.draggable = true;
+        card.style.setProperty("--lvl", item.level);
+        card.draggable = false;
         card.dataset.index = String(idx);
 
         const head = document.createElement("div");
-        head.className = "head indent";
-        head.style.setProperty("--lvl", item.level);
+        head.className = "head";
+        head.draggable = true;
 
         const title = document.createElement("div");
         title.className = "title";
@@ -539,8 +521,7 @@
         card.appendChild(head);
 
         const details = document.createElement("div");
-        details.className = "details indent details-pad";
-        details.style.setProperty("--lvl", item.level);
+        details.className = "details";
 
         details.innerHTML = `
           <div class="grid">
@@ -605,12 +586,17 @@
         card.appendChild(details);
 
         // Drag & Drop (reorder blocks)
-        card.addEventListener("dragstart", (e)=>{
+        head.addEventListener("dragstart", (e)=>{
+          const selection = window.getSelection();
+          if(selection && !selection.isCollapsed){
+            e.preventDefault();
+            return;
+          }
           card.classList.add("dragging");
           e.dataTransfer.effectAllowed = "move";
           e.dataTransfer.setData("text/plain", item.id);
         });
-        card.addEventListener("dragend", ()=>{
+        head.addEventListener("dragend", ()=>{
           card.classList.remove("dragging");
           hint.classList.remove("show");
         });
@@ -621,7 +607,7 @@
           const rect = card.getBoundingClientRect();
           const before = e.clientY < rect.top + rect.height/2;
           hint.classList.add("show");
-          hint.style.marginLeft = getComputedStyle(head).paddingLeft;
+          hint.style.marginLeft = `${item.level * 30}px`;
           hint.dataset.dropBefore = before ? "1" : "0";
           hint.dataset.targetId = item.id;
 
@@ -672,7 +658,6 @@
     function render(){
       renderMenuSelect();
       renderList();
-      $("#exportArea").value = "";
     }
 
     // Topbar actions
@@ -700,27 +685,36 @@
       toast("Uloženo do localStorage");
     });
 
-    $("#exportBtn").addEventListener("click", ()=>{
+    $("#previewBtn").addEventListener("click", ()=>{
       const menu = getActiveMenu();
-      const exportObj = {
-        menu: { id: menu.id, name: menu.name },
-        items: menu.items.map(it=>({ title: it.title, url: it.url, level: it.level }))
-      };
-      $("#exportArea").value = JSON.stringify(exportObj, null, 2);
-      toast("Export hotový");
-    });
-
-    $("#copyBtn").addEventListener("click", async ()=>{
-      const ta = $("#exportArea");
-      if(!ta.value.trim()) $("#exportBtn").click();
-      try{
-        await navigator.clipboard.writeText(ta.value);
-        toast("Zkopírováno");
-      }catch(e){
-        ta.focus(); ta.select();
-        document.execCommand("copy");
-        toast("Zkopírováno");
+      const popup = window.open("", "menuPreview", "width=640,height=720,resizable=yes,scrollbars=yes");
+      if(!popup){
+        toast("Popup okno je blokováno prohlížečem");
+        return;
       }
+
+      const rows = menu.items.map(it=>{
+        const left = it.level * 24;
+        return `<li style="margin-left:${left}px;padding:10px 12px;border:1px solid #dcdcde;border-radius:6px;background:#fff;list-style:none;">
+          <a href="${escapeAttr(it.url || "#")}" style="color:#2271b1;text-decoration:none;font-weight:600;">${escapeHtml(it.title || "(bez názvu)")}</a>
+          <div style="margin-top:4px;font-size:12px;color:#646970;">${escapeHtml(it.url || "#")}</div>
+        </li>`;
+      }).join("");
+
+      popup.document.write(`<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Náhled menu – ${escapeHtml(menu.name)}</title>
+</head>
+<body style="margin:0;padding:20px;background:#f0f2f5;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1d2327;">
+  <h1 style="margin:0 0 14px;font-size:22px;">Náhled: ${escapeHtml(menu.name)}</h1>
+  <ul style="margin:0;padding:0;display:grid;gap:10px;">${rows || '<li style="list-style:none;color:#646970;">Menu je prázdné.</li>'}</ul>
+</body>
+</html>`);
+      popup.document.close();
+      popup.focus();
     });
 
     // init
