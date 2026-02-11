@@ -52,7 +52,6 @@ function getActiveMenu(){
 
 function setActiveMenu(id){
   state.activeMenuId = id;
-  saveState();
   render();
 }
 
@@ -144,7 +143,8 @@ function promote(items, idx){
 function demote(items, idx){
   if(idx === 0) return;
   const curLvl = items[idx].level;
-  const desired = items[idx-1].level + 1;
+  const maxAllowed = items[idx-1].level + 1;
+  const desired = Math.min(curLvl + 1, maxAllowed);
   if(desired <= curLvl) return;
   const delta = desired - curLvl;
   const end = blockEnd(items, idx);
@@ -215,7 +215,6 @@ function renderList(){
     toggle.addEventListener("click", (e)=>{
       e.stopPropagation();
       item.open = !item.open;
-      saveState();
       renderList();
     });
 
@@ -258,7 +257,6 @@ function renderList(){
       if(!field) return;
       if(field === "title") item.title = t.value;
       if(field === "url") item.url = t.value;
-      saveState();
       const headTxt = card.querySelector(".title .txt");
       if(headTxt && field === "title") headTxt.textContent = item.title || "(bez názvu)";
     });
@@ -282,7 +280,6 @@ function renderList(){
           menu.items.splice(idxNow, end-idxNow+1);
         } else return;
       }
-      saveState();
       renderList();
     });
 
@@ -342,7 +339,6 @@ function renderList(){
         insertBlock(items, targetEnd + 1, block);
       }
 
-      saveState();
       renderList();
     });
 
@@ -367,7 +363,6 @@ function render(){
 $("#newItemBtn").addEventListener("click", ()=>{
   const menu = getActiveMenu();
   menu.items.push({id:uid(), title:"Nová položka", url:"", level:0, open:true});
-  saveState();
   renderList();
   toast("Položka přidána");
 });
@@ -378,7 +373,6 @@ $("#newMenuBtn").addEventListener("click", ()=>{
   const id = uid();
   state.menus.push({id, name, items:[]});
   state.activeMenuId = id;
-  saveState();
   render();
   toast("Menu vytvořeno");
 });
@@ -388,6 +382,41 @@ $("#saveBtn").addEventListener("click", ()=>{
   toast("Uloženo do localStorage");
 });
 
+function buildPreviewTree(items){
+  const root = [];
+  const stack = [];
+
+  items.forEach(item=>{
+    const node = { ...item, children: [] };
+    while(stack.length && stack[stack.length-1].level >= item.level) stack.pop();
+    if(stack.length === 0) root.push(node);
+    else stack[stack.length-1].children.push(node);
+    stack.push(node);
+  });
+
+  return root;
+}
+
+function renderPreviewMenu(nodes, level=0){
+  if(nodes.length === 0) return "";
+  const isTop = level === 0;
+  const listStyle = isTop
+    ? "display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin:0;padding:0;list-style:none;"
+    : "margin:8px 0 0;padding:0;list-style:none;display:grid;gap:8px;";
+
+  return `<ul style="${listStyle}">${nodes.map(node=>{
+    const itemStyle = isTop
+      ? "min-width:180px;background:#fff;border:1px solid #dcdcde;border-radius:8px;padding:10px 12px;"
+      : "margin-left:16px;background:#fff;border:1px solid #dcdcde;border-radius:6px;padding:8px 10px;";
+
+    return `<li style="${itemStyle}">
+      <a href="${escapeAttr(node.url || "#")}" style="color:#2271b1;text-decoration:none;font-weight:600;display:inline-block;">${escapeHtml(node.title || "(bez názvu)")}</a>
+      <div style="margin-top:4px;font-size:12px;color:#646970;">${escapeHtml(node.url || "#")}</div>
+      ${renderPreviewMenu(node.children, level + 1)}
+    </li>`;
+  }).join("")}</ul>`;
+}
+
 $("#previewBtn").addEventListener("click", ()=>{
   const menu = getActiveMenu();
   const popup = window.open("", "menuPreview", "width=640,height=720,resizable=yes,scrollbars=yes");
@@ -396,13 +425,8 @@ $("#previewBtn").addEventListener("click", ()=>{
     return;
   }
 
-  const rows = menu.items.map(it=>{
-    const left = it.level * 24;
-    return `<li style="margin-left:${left}px;padding:10px 12px;border:1px solid #dcdcde;border-radius:6px;background:#fff;list-style:none;">
-      <a href="${escapeAttr(it.url || "#")}" style="color:#2271b1;text-decoration:none;font-weight:600;">${escapeHtml(it.title || "(bez názvu)")}</a>
-      <div style="margin-top:4px;font-size:12px;color:#646970;">${escapeHtml(it.url || "#")}</div>
-    </li>`;
-  }).join("");
+  const tree = buildPreviewTree(menu.items);
+  const rows = renderPreviewMenu(tree);
 
   popup.document.write(`<!DOCTYPE html>
 <html lang="cs">
@@ -413,7 +437,7 @@ $("#previewBtn").addEventListener("click", ()=>{
 </head>
 <body style="margin:0;padding:20px;background:#f0f2f5;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1d2327;">
   <h1 style="margin:0 0 14px;font-size:22px;">Náhled: ${escapeHtml(menu.name)}</h1>
-  <ul style="margin:0;padding:0;display:grid;gap:10px;">${rows || '<li style="list-style:none;color:#646970;">Menu je prázdné.</li>'}</ul>
+  ${rows || '<div style="color:#646970;">Menu je prázdné.</div>'}
 </body>
 </html>`);
   popup.document.close();
@@ -421,5 +445,4 @@ $("#previewBtn").addEventListener("click", ()=>{
 });
 
 // init
-saveState();
 render();
