@@ -16,6 +16,8 @@
 
       <button class="btn" id="newMenuBtn" title="Vytvořit nové menu">Nové menu</button>
       <button class="btn" id="newItemBtn" title="Přidat položku do aktuálního menu">Nová položka</button>
+      <button class="btn" id="undoBtn" title="Zpět">Zpět</button>
+      <button class="btn" id="redoBtn" title="Znovu">Znovu</button>
 
       <div class="spacer"></div>
 
@@ -31,6 +33,48 @@
     </div>
 
     <div id="list" class="list"></div>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" hidden></div>
+
+  <div id="newMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="newMenuTitle" hidden>
+    <div class="modal-head">
+      <h2 id="newMenuTitle">Nové menu</h2>
+      <button type="button" class="icon-close" data-close-modal="newMenuModal" aria-label="Zavřít">×</button>
+    </div>
+    <form id="newMenuForm" class="modal-body">
+      <div>
+        <label for="newMenuName">Název</label>
+        <input id="newMenuName" name="name" type="text" required placeholder="Např. Hlavní menu" />
+      </div>
+      <div>
+        <label for="newMenuId">ID</label>
+        <input id="newMenuId" name="id" type="text" readonly />
+      </div>
+      <div>
+        <label for="newMenuLocation">Umístění menu</label>
+        <select id="newMenuLocation" name="location">
+          <option value="header">Záhlaví</option>
+          <option value="footer">Zápatí</option>
+        </select>
+      </div>
+      <div>
+        <label for="newMenuDepth">Max-depth</label>
+        <input id="newMenuDepth" name="maxDepth" type="number" min="0" max="10" value="2" required />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" data-close-modal="newMenuModal">Zrušit</button>
+        <button type="submit" class="btn primary">Vytvořit menu</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="previewModal" class="modal preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewTitle" hidden>
+    <div class="modal-head">
+      <h2 id="previewTitle">Náhled menu</h2>
+      <button type="button" class="icon-close" data-close-modal="previewModal" aria-label="Zavřít">×</button>
+    </div>
+    <div id="previewContent" class="modal-body"></div>
   </div>
 
   <div id="toast" class="toast"></div>
