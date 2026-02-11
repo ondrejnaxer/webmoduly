@@ -52,6 +52,7 @@ function getActiveMenu(){
 
 function setActiveMenu(id){
   state.activeMenuId = id;
+  saveState();
   render();
 }
 
@@ -215,6 +216,7 @@ function renderList(){
     toggle.addEventListener("click", (e)=>{
       e.stopPropagation();
       item.open = !item.open;
+      saveState();
       renderList();
     });
 
@@ -257,6 +259,7 @@ function renderList(){
       if(!field) return;
       if(field === "title") item.title = t.value;
       if(field === "url") item.url = t.value;
+      saveState();
       const headTxt = card.querySelector(".title .txt");
       if(headTxt && field === "title") headTxt.textContent = item.title || "(bez názvu)";
     });
@@ -278,6 +281,7 @@ function renderList(){
         const end = blockEnd(menu.items, idxNow);
         menu.items.splice(idxNow, end-idxNow+1);
       }
+      saveState();
       renderList();
     });
 
@@ -337,6 +341,7 @@ function renderList(){
         insertBlock(items, targetEnd + 1, block);
       }
 
+      saveState();
       renderList();
     });
 
@@ -361,6 +366,7 @@ function render(){
 $("#newItemBtn").addEventListener("click", ()=>{
   const menu = getActiveMenu();
   menu.items.push({id:uid(), title:"Nová položka", url:"", level:0, open:true});
+  saveState();
   renderList();
   toast("Položka přidána");
 });
@@ -371,6 +377,7 @@ $("#newMenuBtn").addEventListener("click", ()=>{
   const id = uid();
   state.menus.push({id, name, items:[]});
   state.activeMenuId = id;
+  saveState();
   render();
   toast("Menu vytvořeno");
 });
