@@ -249,10 +249,6 @@ function arrowIcon(){
   return `<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 }
 
-function crossIcon(){
-  return `<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 6L14 14M14 6L6 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>`;
-}
-
 function escapeHtml(str){
   return String(str ?? "")
     .replaceAll("&", "&amp;")
@@ -281,6 +277,24 @@ function sanitizePreviewHref(url){
 }
 
 const editingGuard = new Set();
+const trashDropzone = $("#trashDropzone");
+let draggingItemId = null;
+
+function showTrashDropzone(){
+  trashDropzone.classList.add("show");
+}
+
+function hideTrashDropzone(){
+  trashDropzone.classList.remove("show", "active");
+}
+
+function removeItemBlock(menu, id){
+  const idxNow = menu.items.findIndex(x => x.id === id);
+  if(idxNow < 0) return false;
+  const end = blockEnd(menu.items, idxNow);
+  menu.items.splice(idxNow, end - idxNow + 1);
+  return true;
+}
 
 function renderList(){
   const menu = getActiveMenu();
@@ -308,22 +322,6 @@ function renderList(){
     const title = document.createElement("div");
     title.className = "title";
     title.innerHTML = `<span class="txt">${escapeHtml(item.title || "(bez názvu)")}</span><span class="badge">Custom Link</span>`;
-
-    const removeBtn = document.createElement("button");
-    removeBtn.className = "icon-btn danger";
-    removeBtn.type = "button";
-    removeBtn.title = "Smazat položku";
-    removeBtn.innerHTML = crossIcon();
-    removeBtn.addEventListener("click", e => {
-      e.stopPropagation();
-      const idxNow = menu.items.findIndex(x => x.id === item.id);
-      if(idxNow < 0) return;
-      recordHistory(menu);
-      const end = blockEnd(menu.items, idxNow);
-      menu.items.splice(idxNow, end - idxNow + 1);
-      renderList();
-      toast("Položka smazána");
-    });
 
     const toggle = document.createElement("button");
     toggle.className = "toggle";
@@ -362,7 +360,7 @@ function renderList(){
             <button class="linkbtn" data-act="top">Na začátek úrovně</button>
           </div>
           <div class="spacer"></div>
-          <button class="btn danger" data-act="remove" type="button">Odebrat</button>
+          <button class="btn danger" data-act="remove" type="button">Smazat</button>
         </div>
       </div>
       <div class="meta">Úroveň: <b>${item.level}</b> &nbsp;•&nbsp; ID: <code>${item.id}</code></div>
@@ -399,10 +397,7 @@ function renderList(){
       if(act === "top") moveTop(menu.items, idxNow);
       if(act === "promote") promote(menu.items, idxNow);
       if(act === "demote") demote(menu.items, idxNow, menu.maxDepth);
-      if(act === "remove"){
-        const end = blockEnd(menu.items, idxNow);
-        menu.items.splice(idxNow, end - idxNow + 1);
-      }
+      if(act === "remove") removeItemBlock(menu, item.id);
       renderList();
     });
 
@@ -415,13 +410,17 @@ function renderList(){
         return;
       }
       card.classList.add("dragging");
+      draggingItemId = item.id;
+      showTrashDropzone();
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("text/plain", item.id);
     });
 
     head.addEventListener("dragend", () => {
       card.classList.remove("dragging");
+      draggingItemId = null;
       hint.classList.remove("show");
+      hideTrashDropzone();
     });
 
     row.addEventListener("dragover", e => {
@@ -519,7 +518,7 @@ function openModal(modalId){
 function closeModal(modalId){
   $(`#${modalId}`).hidden = true;
   const hasOpen = Array.from(document.querySelectorAll(".modal")).some(m => !m.hidden);
-  modalBackdrop.hidden = hasOpen;
+  modalBackdrop.hidden = !hasOpen;
 }
 
 modalBackdrop.addEventListener("click", () => {
@@ -604,6 +603,31 @@ $("#previewBtn").addEventListener("click", () => {
     <div class="preview-nav">${rows || '<div style="color:#646970;padding:8px;">Menu je prázdné.</div>'}</div>
   `;
   openModal("previewModal");
+});
+
+trashDropzone.addEventListener("dragover", e => {
+  if(!draggingItemId) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  trashDropzone.classList.add("active");
+});
+
+trashDropzone.addEventListener("dragleave", () => {
+  trashDropzone.classList.remove("active");
+});
+
+trashDropzone.addEventListener("drop", e => {
+  if(!draggingItemId) return;
+  e.preventDefault();
+  const menu = getActiveMenu();
+  recordHistory(menu);
+  const removed = removeItemBlock(menu, draggingItemId);
+  draggingItemId = null;
+  hideTrashDropzone();
+  if(removed){
+    renderList();
+    toast("Položka smazána přes koš");
+  }
 });
 
 render();

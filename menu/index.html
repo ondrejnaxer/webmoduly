@@ -21,8 +21,16 @@
 
       <div class="spacer"></div>
 
-      <button class="btn" id="previewBtn">Náhled menu</button>
-      <button class="btn primary" id="saveBtn">Uložit</button>
+      <div class="top-actions-right">
+        <button class="btn icon-only" id="undoBtn" title="Zpět" aria-label="Zpět">
+          <span aria-hidden="true">↶</span>
+        </button>
+        <button class="btn icon-only" id="redoBtn" title="Znovu" aria-label="Znovu">
+          <span aria-hidden="true">↷</span>
+        </button>
+        <button class="btn" id="previewBtn">Náhled menu</button>
+        <button class="btn primary" id="saveBtn">Uložit</button>
+      </div>
     </div>
   </div>
 
@@ -33,6 +41,14 @@
     </div>
 
     <div id="list" class="list"></div>
+  </div>
+
+  <div id="trashDropzone" class="trash-dropzone" aria-hidden="true">
+    <div class="trash-icon" aria-hidden="true">🗑️</div>
+    <div>
+      <strong>Přetáhněte sem pro smazání položky</strong>
+      <div>Po puštění bude odstraněna položka i její podřízené položky.</div>
+    </div>
   </div>
 
   <div id="modalBackdrop" class="modal-backdrop" hidden></div>
