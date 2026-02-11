@@ -335,6 +335,7 @@ function renderList(){
     });
 
     head.appendChild(title);
+    head.appendChild(removeBtn);
     head.appendChild(toggle);
     card.appendChild(head);
 
