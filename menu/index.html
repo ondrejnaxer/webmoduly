@@ -417,9 +417,10 @@
     }
 
     function moveDown(items, idx){
-      const next = findNextSibling(items, idx);
+      let next = findNextSibling(items, idx);
       if(next < 0) return;
       const block = extractBlock(items, idx);
+      if(idx < next) next -= block.length;
       const nextEnd = blockEnd(items, next);
       insertBlock(items, nextEnd + 1, block);
     }
