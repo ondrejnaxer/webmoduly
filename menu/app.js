@@ -700,15 +700,15 @@ $("#saveBtn").addEventListener("click", () => {
 $("#saveAndSwitchBtn").addEventListener("click", () => {
   saveState();
   syncSavedSnapshot();
-  closeModal("unsavedChangesModal");
   resolvePendingMenuSwitch();
+  closeModal("unsavedChangesModal");
   toast("Uloženo do localStorage");
 });
 
 $("#discardAndSwitchBtn").addEventListener("click", () => {
   discardCurrentMenuChanges();
-  closeModal("unsavedChangesModal");
   resolvePendingMenuSwitch();
+  closeModal("unsavedChangesModal");
   toast("Neuložené změny byly zahozeny");
 });
 
