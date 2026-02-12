@@ -341,6 +341,13 @@ function renderList(){
       renderList();
     });
 
+    head.addEventListener("click", e => {
+      const clickedToggle = e.target.closest(".toggle");
+      if(clickedToggle) return;
+      item.open = !item.open;
+      renderList();
+    });
+
     head.appendChild(title);
     head.appendChild(toggle);
     card.appendChild(head);
@@ -503,9 +510,10 @@ function buildPreviewTree(items){
   return root;
 }
 
-function renderPreviewMenu(nodes, isSubmenu = false){
+function renderPreviewMenu(nodes, depth = 0){
   if(nodes.length === 0) return "";
-  const listClass = isSubmenu ? "preview-submenu-list" : "preview-menu-list";
+  const listClass = depth === 0 ? "preview-menu-list" : "preview-submenu-list";
+  const submenuClass = depth === 0 ? "preview-submenu depth-1" : "preview-submenu depth-2plus";
   return `<ul class="${listClass}">${nodes.map(node => {
     const hasChildren = node.children.length > 0;
     return `<li class="preview-menu-item${hasChildren ? " has-children" : ""}">
@@ -513,7 +521,7 @@ function renderPreviewMenu(nodes, isSubmenu = false){
         <span>${escapeHtml(node.title || "(bez názvu)")}</span>
         ${hasChildren ? '<span class="preview-marker">▾</span>' : ''}
       </a>
-      ${hasChildren ? `<div class="preview-submenu">${renderPreviewMenu(node.children, true)}</div>` : ""}
+      ${hasChildren ? `<div class="${submenuClass}">${renderPreviewMenu(node.children, depth + 1)}</div>` : ""}
     </li>`;
   }).join("")}</ul>`;
 }
