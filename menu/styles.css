@@ -42,7 +42,7 @@ select:focus,input:focus{border-color:rgba(34,113,177,.6);box-shadow:0 0 0 3px r
 .list{background:transparent}
 .menu-row{margin:10px 0;padding-left:calc(var(--lvl, 0) * var(--indent))}
 .menu-item{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);max-width:860px;width:100%;overflow:hidden}
-.menu-item.dragging{opacity:.6;outline:2px dashed rgba(34,113,177,.6);outline-offset:2px}
+.menu-item.dragging{opacity:1;outline:2px solid rgba(34,113,177,.65);outline-offset:2px;box-shadow:0 0 0 4px rgba(34,113,177,.15),var(--shadow)}
 .menu-item .head{display:flex;align-items:center;gap:10px;padding:var(--rowpad);cursor:grab}
 .menu-item .head:active{cursor:grabbing}
 .title{font-weight:700;flex:1;display:flex;align-items:center;gap:8px;min-width:0}

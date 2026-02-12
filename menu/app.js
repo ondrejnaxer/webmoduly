@@ -388,11 +388,11 @@ function renderList(){
 
     const card = document.createElement("div");
     card.className = "menu-item" + (item.open ? " open" : "");
-    card.draggable = false;
+    card.draggable = true;
 
     const head = document.createElement("div");
     head.className = "head";
-    head.draggable = true;
+    head.draggable = false;
 
     const title = document.createElement("div");
     title.className = "title";
@@ -484,20 +484,27 @@ function renderList(){
 
     card.appendChild(details);
 
-    head.addEventListener("dragstart", e => {
+    card.addEventListener("dragstart", e => {
       const selection = window.getSelection();
       if(selection && !selection.isCollapsed){
         e.preventDefault();
         return;
       }
+
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", item.id);
+
+      const cardRect = card.getBoundingClientRect();
+      const grabX = Math.min(Math.max(e.clientX - cardRect.left, 0), cardRect.width);
+      const grabY = Math.min(Math.max(e.clientY - cardRect.top, 0), cardRect.height);
+      e.dataTransfer.setDragImage(card, grabX, grabY);
+
       card.classList.add("dragging");
       draggingItemId = item.id;
       showTrashDropzone();
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", item.id);
     });
 
-    head.addEventListener("dragend", () => {
+    card.addEventListener("dragend", () => {
       card.classList.remove("dragging");
       draggingItemId = null;
       hint.classList.remove("show");
