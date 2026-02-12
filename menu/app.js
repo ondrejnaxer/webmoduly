@@ -490,18 +490,11 @@ function renderList(){
         e.preventDefault();
         return;
       }
-
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", item.id);
-
-      const cardRect = card.getBoundingClientRect();
-      const grabX = Math.min(Math.max(e.clientX - cardRect.left, 0), cardRect.width);
-      const grabY = Math.min(Math.max(e.clientY - cardRect.top, 0), cardRect.height);
-      e.dataTransfer.setDragImage(card, grabX, grabY);
-
       card.classList.add("dragging");
       draggingItemId = item.id;
       showTrashDropzone();
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", item.id);
     });
 
     head.addEventListener("dragend", () => {
