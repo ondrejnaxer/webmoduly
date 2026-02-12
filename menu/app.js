@@ -346,7 +346,6 @@ function sanitizePreviewHref(){
 const editingGuard = new Set();
 const trashDropzone = $("#trashDropzone");
 let draggingItemId = null;
-let draggingPreviewEl = null;
 
 function showTrashDropzone(){
   trashDropzone.classList.add("show");
@@ -486,6 +485,11 @@ function renderList(){
     card.appendChild(details);
 
     card.addEventListener("dragstart", e => {
+      const target = e.target instanceof Element ? e.target : null;
+      if(!target?.closest(".head") || target.closest("button, input, textarea, select, [contenteditable='true']")){
+        e.preventDefault();
+        return;
+      }
       const selection = window.getSelection();
       if(selection && !selection.isCollapsed){
         e.preventDefault();
@@ -507,8 +511,6 @@ function renderList(){
 
     card.addEventListener("dragend", () => {
       card.classList.remove("dragging");
-      draggingPreviewEl?.remove();
-      draggingPreviewEl = null;
       draggingItemId = null;
       hint.classList.remove("show");
       hideTrashDropzone();
