@@ -8,6 +8,94 @@ function debugLog(action, payload = {}) {
   console.log(`[menu2][${ts}] ${action}`, payload);
 }
 
+const consoleHistory = [];
+const CONSOLE_HISTORY_LIMIT = 4000;
+
+function createSafeJsonReplacer() {
+  const seen = new WeakSet();
+  return (_, value) => {
+    if (typeof value === "bigint") return `${value.toString()}n`;
+    if (typeof value === "function") return `[Function ${value.name || "anonymous"}]`;
+    if (value instanceof Error) {
+      return {
+        name: value.name,
+        message: value.message,
+        stack: value.stack
+      };
+    }
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) return "[Circular]";
+      seen.add(value);
+    }
+    return value;
+  };
+}
+
+function serializeConsoleArg(arg) {
+  if (arg === undefined) return "[undefined]";
+  if (typeof arg === "string") return arg;
+  if (typeof arg === "number" || typeof arg === "boolean" || arg === null) return arg;
+  try {
+    return JSON.parse(JSON.stringify(arg, createSafeJsonReplacer()));
+  } catch (e) {
+    return String(arg);
+  }
+}
+
+function recordConsoleEntry(level, args) {
+  consoleHistory.push({
+    timestamp: new Date().toISOString(),
+    level,
+    args: args.map(serializeConsoleArg)
+  });
+  if (consoleHistory.length > CONSOLE_HISTORY_LIMIT) {
+    consoleHistory.shift();
+  }
+}
+
+function installConsoleRecorder() {
+  if (console.__menu2RecorderInstalled) return;
+  const methods = ["log", "info", "warn", "error", "debug"];
+  methods.forEach(level => {
+    const original = console[level].bind(console);
+    console[level] = (...args) => {
+      recordConsoleEntry(level, args);
+      original(...args);
+    };
+  });
+  Object.defineProperty(console, "__menu2RecorderInstalled", {
+    value: true,
+    enumerable: false,
+    configurable: false,
+    writable: false
+  });
+}
+
+function exportConsoleHistoryToFile(filename) {
+  const safeName = (filename && String(filename).trim())
+    || `menu2-console-${new Date().toISOString().replaceAll(":", "-")}.json`;
+
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    entryCount: consoleHistory.length,
+    entries: consoleHistory
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = safeName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+window.exportMenu2Console = exportConsoleHistoryToFile;
+installConsoleRecorder();
+
+
 function snapshotMenuState(menu) {
   if (!menu) return null;
   return {
