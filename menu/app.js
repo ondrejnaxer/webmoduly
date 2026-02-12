@@ -388,11 +388,11 @@ function renderList(){
 
     const card = document.createElement("div");
     card.className = "menu-item" + (item.open ? " open" : "");
-    card.draggable = true;
+    card.draggable = false;
 
     const head = document.createElement("div");
     head.className = "head";
-    head.draggable = false;
+    head.draggable = true;
 
     const title = document.createElement("div");
     title.className = "title";
@@ -484,12 +484,7 @@ function renderList(){
 
     card.appendChild(details);
 
-    card.addEventListener("dragstart", e => {
-      const target = e.target instanceof Element ? e.target : null;
-      if(!target?.closest(".head") || target.closest("button, input, textarea, select, [contenteditable='true']")){
-        e.preventDefault();
-        return;
-      }
+    head.addEventListener("dragstart", e => {
       const selection = window.getSelection();
       if(selection && !selection.isCollapsed){
         e.preventDefault();
@@ -509,7 +504,7 @@ function renderList(){
       showTrashDropzone();
     });
 
-    card.addEventListener("dragend", () => {
+    head.addEventListener("dragend", () => {
       card.classList.remove("dragging");
       draggingItemId = null;
       hint.classList.remove("show");
