@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Menu</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="inner">
+      <div class="field">
+        <label for="menuSelect">Vybrat menu</label>
+        <select id="menuSelect"></select>
+      </div>
+
+      <button class="btn" id="newMenuBtn" title="Vytvořit nové menu">Nové menu</button>
+      <button class="btn" id="newItemBtn" title="Přidat položku do aktuálního menu">Nová položka</button>
+
+      <div class="spacer"></div>
+
+      <div class="top-actions-right">
+        <button class="btn icon-only" id="undoBtn" title="Zpět" aria-label="Zpět">
+          <span aria-hidden="true">↶</span>
+        </button>
+        <button class="btn icon-only" id="redoBtn" title="Znovu" aria-label="Znovu">
+          <span aria-hidden="true">↷</span>
+        </button>
+        <button class="btn" id="previewBtn">Náhled menu</button>
+        <button class="btn primary" id="saveBtn">Uložit</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="notice">
+      Přetáhněte položky do pořadí, které preferujete. Kliknutím na šipku vpravo otevřete detail položky.
+      Víceúrovňovou strukturu řešte tlačítky <b>Povýšit</b>/<b>Ponížit</b>.
+    </div>
+
+    <div id="list" class="list"></div>
+  </div>
+
+  <div id="trashDropzone" class="trash-dropzone" aria-hidden="true">
+    <div class="trash-icon" aria-hidden="true">🗑️</div>
+    <div>
+      <strong>Přetáhněte sem pro smazání položky</strong>
+      <div>Po puštění bude odstraněna položka i její podřízené položky.</div>
+    </div>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" hidden></div>
+
+  <div id="newMenuModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="newMenuTitle" hidden>
+    <div class="modal-head">
+      <h2 id="newMenuTitle">Nové menu</h2>
+      <button type="button" class="icon-close" data-close-modal="newMenuModal" aria-label="Zavřít">×</button>
+    </div>
+    <form id="newMenuForm" class="modal-body">
+      <div>
+        <label for="newMenuName">Název</label>
+        <input id="newMenuName" name="name" type="text" required placeholder="Např. Hlavní menu" />
+      </div>
+      <div>
+        <label for="newMenuId">ID</label>
+        <input id="newMenuId" name="id" type="text" readonly />
+      </div>
+      <div>
+        <label for="newMenuLocation">Umístění menu</label>
+        <select id="newMenuLocation" name="location">
+          <option value="header">Záhlaví</option>
+          <option value="footer">Zápatí</option>
+        </select>
+      </div>
+      <div>
+        <label for="newMenuDepth">Max-depth</label>
+        <input id="newMenuDepth" name="maxDepth" type="number" min="0" max="10" value="2" required />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" data-close-modal="newMenuModal">Zrušit</button>
+        <button type="submit" class="btn primary">Vytvořit menu</button>
+      </div>
+    </form>
+  </div>
+
+
+  <div id="unsavedChangesModal" class="modal confirm-modal" role="dialog" aria-modal="true" aria-labelledby="unsavedChangesTitle" hidden>
+    <div class="modal-head">
+      <h2 id="unsavedChangesTitle">Neuložené úpravy</h2>
+      <button type="button" class="icon-close" data-close-modal="unsavedChangesModal" aria-label="Zavřít">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-text">Máte neuložené změny. Přejete si je uložit, nebo zahodit?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn primary" id="saveAndSwitchBtn">Uložit</button>
+        <button type="button" class="btn" id="discardAndSwitchBtn">Zahodit změny</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="previewModal" class="modal preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewTitle" hidden>
+    <div class="modal-head">
+      <h2 id="previewTitle">Náhled menu</h2>
+      <button type="button" class="icon-close" data-close-modal="previewModal" aria-label="Zavřít">×</button>
+    </div>
+    <div id="previewContent" class="modal-body"></div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
