@@ -68,6 +68,18 @@ function loadState(){
 }
 
 let state = loadState();
+let savedMenusSnapshot = JSON.stringify(state.menus);
+const dirtyMenuIds = new Set();
+let pendingMenuSwitchId = null;
+
+function markDirty(menuId){
+  if(menuId) dirtyMenuIds.add(menuId);
+}
+
+function syncSavedSnapshot(){
+  savedMenusSnapshot = JSON.stringify(state.menus);
+  dirtyMenuIds.clear();
+}
 
 function saveState(){
   const persistedState = {
@@ -84,6 +96,7 @@ function getActiveMenu(){
 
 function setActiveMenu(id){
   state.activeMenuId = id || null;
+  state.history = {};
   render();
 }
 
@@ -98,6 +111,7 @@ function cloneItems(items){
 
 function recordHistory(menu){
   if(!menu) return;
+  markDirty(menu.id);
   const history = getHistory(menu.id);
   history.undo.push(cloneItems(menu.items));
   history.redo = [];
@@ -256,7 +270,53 @@ function renderMenuSelect(){
     sel.appendChild(opt);
   });
   if(getActiveMenu()) sel.value = getActiveMenu().id;
-  sel.onchange = () => setActiveMenu(sel.value);
+  sel.onchange = () => requestMenuSwitch(sel.value);
+}
+
+function requestMenuSwitch(nextMenuId){
+  const currentMenu = getActiveMenu();
+  if(!currentMenu || currentMenu.id === nextMenuId){
+    setActiveMenu(nextMenuId);
+    return;
+  }
+
+  if(!dirtyMenuIds.has(currentMenu.id)){
+    setActiveMenu(nextMenuId);
+    return;
+  }
+
+  pendingMenuSwitchId = nextMenuId;
+  $("#menuSelect").value = currentMenu.id;
+  openModal("unsavedChangesModal");
+}
+
+function discardCurrentMenuChanges(){
+  const currentMenu = getActiveMenu();
+  if(!currentMenu) return;
+
+  const savedMenus = JSON.parse(savedMenusSnapshot || "[]");
+  const savedMenu = savedMenus.find(menu => menu.id === currentMenu.id);
+
+  if(savedMenu){
+    const idx = state.menus.findIndex(menu => menu.id === currentMenu.id);
+    if(idx >= 0){
+      state.menus[idx] = {
+        ...savedMenu,
+        items: (savedMenu.items || []).map(item => ({ ...item, open: false }))
+      };
+    }
+  }else{
+    state.menus = state.menus.filter(menu => menu.id !== currentMenu.id);
+  }
+
+  dirtyMenuIds.delete(currentMenu.id);
+}
+
+function resolvePendingMenuSwitch(){
+  if(!pendingMenuSwitchId) return;
+  const targetId = pendingMenuSwitchId;
+  pendingMenuSwitchId = null;
+  setActiveMenu(targetId);
 }
 
 function arrowIcon(){
@@ -540,12 +600,20 @@ function openModal(modalId){
 
 function closeModal(modalId){
   $(`#${modalId}`).hidden = true;
+  if(modalId === "unsavedChangesModal"){
+    pendingMenuSwitchId = null;
+    const activeMenu = getActiveMenu();
+    if(activeMenu) $("#menuSelect").value = activeMenu.id;
+  }
   const hasOpen = Array.from(document.querySelectorAll(".modal")).some(m => !m.hidden);
   modalBackdrop.hidden = !hasOpen;
 }
 
 modalBackdrop.addEventListener("click", () => {
   document.querySelectorAll(".modal").forEach(modal => { modal.hidden = true; });
+  pendingMenuSwitchId = null;
+  const activeMenu = getActiveMenu();
+  if(activeMenu) $("#menuSelect").value = activeMenu.id;
   modalBackdrop.hidden = true;
 });
 
@@ -556,6 +624,9 @@ document.querySelectorAll("[data-close-modal]").forEach(btn => {
 window.addEventListener("keydown", e => {
   if(e.key === "Escape"){
     document.querySelectorAll(".modal").forEach(modal => { modal.hidden = true; });
+    pendingMenuSwitchId = null;
+    const activeMenu = getActiveMenu();
+    if(activeMenu) $("#menuSelect").value = activeMenu.id;
     modalBackdrop.hidden = true;
   }
 });
@@ -604,6 +675,7 @@ newMenuForm.addEventListener("submit", e => {
 
   state.menus.push({ id, name, location, maxDepth, items: [] });
   state.activeMenuId = id;
+  markDirty(id);
   getHistory(id);
   closeModal("newMenuModal");
   render();
@@ -621,7 +693,23 @@ $("#redoBtn").addEventListener("click", () => {
 
 $("#saveBtn").addEventListener("click", () => {
   saveState();
+  syncSavedSnapshot();
   toast("Uloženo do localStorage");
+});
+
+$("#saveAndSwitchBtn").addEventListener("click", () => {
+  saveState();
+  syncSavedSnapshot();
+  closeModal("unsavedChangesModal");
+  resolvePendingMenuSwitch();
+  toast("Uloženo do localStorage");
+});
+
+$("#discardAndSwitchBtn").addEventListener("click", () => {
+  discardCurrentMenuChanges();
+  closeModal("unsavedChangesModal");
+  resolvePendingMenuSwitch();
+  toast("Neuložené změny byly zahozeny");
 });
 
 $("#previewBtn").addEventListener("click", () => {
