@@ -52,9 +52,7 @@ function normalizeState(parsed){
     }))
   }));
 
-  if(!result.menus.find(m => m.id === result.activeMenuId)){
-    result.activeMenuId = result.menus[0]?.id || null;
-  }
+  result.activeMenuId = result.menus[0]?.id || null;
 
   return result;
 }
@@ -79,6 +77,11 @@ function markDirty(menuId){
 function syncSavedSnapshot(){
   savedMenusSnapshot = JSON.stringify(state.menus);
   dirtyMenuIds.clear();
+}
+
+function hasUnsavedChanges(){
+  if(dirtyMenuIds.size > 0) return true;
+  return JSON.stringify(state.menus) !== savedMenusSnapshot;
 }
 
 function saveState(){
@@ -631,6 +634,12 @@ window.addEventListener("keydown", e => {
   }
 });
 
+window.addEventListener("beforeunload", e => {
+  if(!hasUnsavedChanges()) return;
+  e.preventDefault();
+  e.returnValue = "";
+});
+
 $("#newItemBtn").addEventListener("click", () => {
   const menu = getActiveMenu();
   if(!menu) return;
@@ -700,15 +709,15 @@ $("#saveBtn").addEventListener("click", () => {
 $("#saveAndSwitchBtn").addEventListener("click", () => {
   saveState();
   syncSavedSnapshot();
-  closeModal("unsavedChangesModal");
   resolvePendingMenuSwitch();
+  closeModal("unsavedChangesModal");
   toast("Uloženo do localStorage");
 });
 
 $("#discardAndSwitchBtn").addEventListener("click", () => {
   discardCurrentMenuChanges();
-  closeModal("unsavedChangesModal");
   resolvePendingMenuSwitch();
+  closeModal("unsavedChangesModal");
   toast("Neuložené změny byly zahozeny");
 });
 
