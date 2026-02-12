@@ -1,78 +1,116 @@
 const STORAGE_KEY = "menu_builder_v1";
 const $ = (s, el = document) => el.querySelector(s);
 
-// --- DEBUG LOGIC START ---
-(function () {
-  function blockEnd(items, startIdx) {
-    const base = items[startIdx].level;
-    let end = startIdx;
-    for (let i = startIdx + 1; i < items.length; i++) {
-      if (items[i].level <= base) break;
-      end = i;
+const DEBUG_MENU_LOG = true;
+function debugLog(action, payload = {}) {
+  if (!DEBUG_MENU_LOG) return;
+  const ts = new Date().toISOString();
+  console.log(`[menu2][${ts}] ${action}`, payload);
+}
+
+const consoleHistory = [];
+const CONSOLE_HISTORY_LIMIT = 4000;
+
+function createSafeJsonReplacer() {
+  const seen = new WeakSet();
+  return (_, value) => {
+    if (typeof value === "bigint") return `${value.toString()}n`;
+    if (typeof value === "function") return `[Function ${value.name || "anonymous"}]`;
+    if (value instanceof Error) {
+      return {
+        name: value.name,
+        message: value.message,
+        stack: value.stack
+      };
     }
-    return end;
-  }
-
-  function insertBlock(items, idx, block) {
-    items.splice(idx, 0, ...block);
-  }
-
-  function runTest(testName, itemsInput, fromId, toId, dropBefore) {
-    console.log(`%c[TEST] ${testName}`, "color: blue; font-weight: bold");
-    let items = JSON.parse(JSON.stringify(itemsInput));
-
-    const from = items.findIndex(x => x.id === fromId);
-    let to = items.findIndex(x => x.id === toId);
-
-    console.log(`Initial:`, items.map(x => `${x.id}(${x.level})`));
-
-    if (from < 0 || to < 0) { console.error("Invalid Indices"); return; }
-    const rangeEnd = blockEnd(items, from);
-    const block = items.splice(from, rangeEnd - from + 1);
-
-    if (from < to) to -= block.length;
-
-    const targetItem = items[to];
-    // Logic under test:
-    let desiredLevel = targetItem.level;
-    const levelDiff = desiredLevel - block[0].level;
-
-    console.log(`Moving ${fromId} ${dropBefore ? 'BEFORE' : 'AFTER'} ${toId}. Diff: ${levelDiff}`);
-
-    block.forEach(x => {
-      // Validation check simulation
-      const newLevel = x.level + levelDiff;
-      if (newLevel < 0 || newLevel > 5) console.error("INVALID LEVEL DETECTED", x.id, newLevel);
-    });
-
-    block.forEach(x => x.level += levelDiff);
-
-    if (dropBefore) {
-      insertBlock(items, to, block);
-    } else {
-      const targetEnd = blockEnd(items, to);
-      insertBlock(items, targetEnd + 1, block);
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) return "[Circular]";
+      seen.add(value);
     }
+    return value;
+  };
+}
 
-    console.log(`Result:`, items.map(x => `${x.id}(${x.level})`));
+function serializeConsoleArg(arg) {
+  if (arg === undefined) return "[undefined]";
+  if (typeof arg === "string") return arg;
+  if (typeof arg === "number" || typeof arg === "boolean" || arg === null) return arg;
+  try {
+    return JSON.parse(JSON.stringify(arg, createSafeJsonReplacer()));
+  } catch (e) {
+    return String(arg);
   }
+}
 
-  const items = [
-    { id: "Sub2", level: 2 },
-    { id: "Main", level: 0 }
-  ];
-  // runTest("User Scenario Simplified", items, "Sub2", "Main", true);
+function recordConsoleEntry(level, args) {
+  consoleHistory.push({
+    timestamp: new Date().toISOString(),
+    level,
+    args: args.map(serializeConsoleArg)
+  });
+  if (consoleHistory.length > CONSOLE_HISTORY_LIMIT) {
+    consoleHistory.shift();
+  }
+}
 
-  const complexItems = [
-    { id: "Root", level: 0 },
-    { id: "Sub1", level: 1 },
-    { id: "Sub2", level: 2 }, // Drag this
-    { id: "Main", level: 0 }  // To here
-  ];
-  // runTest("User Scenario Complex", complexItems, "Sub2", "Main", true);
-})();
-// --- DEBUG LOGIC END ---
+function installConsoleRecorder() {
+  if (console.__menu2RecorderInstalled) return;
+  const methods = ["log", "info", "warn", "error", "debug"];
+  methods.forEach(level => {
+    const original = console[level].bind(console);
+    console[level] = (...args) => {
+      recordConsoleEntry(level, args);
+      original(...args);
+    };
+  });
+  Object.defineProperty(console, "__menu2RecorderInstalled", {
+    value: true,
+    enumerable: false,
+    configurable: false,
+    writable: false
+  });
+}
 
+function exportConsoleHistoryToFile(filename) {
+  const safeName = (filename && String(filename).trim())
+    || `menu2-console-${new Date().toISOString().replaceAll(":", "-")}.json`;
+
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    entryCount: consoleHistory.length,
+    entries: consoleHistory
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = safeName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+window.exportMenu2Console = exportConsoleHistoryToFile;
+installConsoleRecorder();
+
+
+function snapshotMenuState(menu) {
+  if (!menu) return null;
+  return {
+    id: menu.id,
+    name: menu.name,
+    location: menu.location,
+    maxDepth: menu.maxDepth,
+    items: (menu.items || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      level: item.level,
+      open: item.open
+    }))
+  };
+}
 
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(2, 6);
@@ -125,7 +163,8 @@ function normalizeState(parsed) {
     }))
   }));
 
-  result.activeMenuId = result.menus[0]?.id || null;
+  const hasPersistedActiveMenu = result.menus.some(menu => menu.id === result.activeMenuId);
+  result.activeMenuId = hasPersistedActiveMenu ? result.activeMenuId : (result.menus[0]?.id || null);
 
   return result;
 }
@@ -142,6 +181,12 @@ let state = loadState();
 let savedMenusSnapshot = JSON.stringify(state.menus);
 const dirtyMenuIds = new Set();
 let pendingMenuSwitchId = null;
+
+debugLog("state:loaded", {
+  activeMenuId: state.activeMenuId,
+  menuCount: state.menus.length,
+  menus: state.menus.map(snapshotMenuState)
+});
 
 function markDirty(menuId) {
   if (menuId) dirtyMenuIds.add(menuId);
@@ -351,6 +396,11 @@ function renderMenuSelect() {
 
 function requestMenuSwitch(nextMenuId) {
   const currentMenu = getActiveMenu();
+  debugLog("ui:menu-switch:requested", {
+    fromMenuId: currentMenu?.id || null,
+    toMenuId: nextMenuId,
+    hasUnsavedForCurrent: Boolean(currentMenu && dirtyMenuIds.has(currentMenu.id))
+  });
   if (!currentMenu || currentMenu.id === nextMenuId) {
     setActiveMenu(nextMenuId);
     return;
@@ -409,7 +459,7 @@ function escapeHtml(str) {
 }
 
 function escapeAttr(str) {
-  return escapeHtml(str).replaceAll("\\n", " ");
+  return escapeHtml(str).replaceAll("\n", " ");
 }
 
 function sanitizePreviewHref() {
@@ -574,6 +624,11 @@ function renderList() {
 
       // Custom Drag Preview with full subtree
       const menu = getActiveMenu();
+      debugLog("dnd:dragstart", {
+        draggedId: item.id,
+        menuId: menu.id,
+        currentOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
       const idx = menu.items.findIndex(x => x.id === item.id);
       const end = blockEnd(menu.items, idx);
       const movingItems = menu.items.slice(idx, end + 1);
@@ -700,8 +755,17 @@ function renderList() {
 
     row.addEventListener("drop", e => {
       e.preventDefault();
-      const draggedId = e.dataTransfer.getData("text/plain");
+      const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
+      debugLog("dnd:drop:received", {
+        draggedId,
+        targetId,
+        dropMode: hint.dataset.dropMode,
+        dropBefore: hint.dataset.dropBefore,
+        targetHintId: hint.dataset.targetId,
+        menuId: menu.id,
+        beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
       if (!draggedId || draggedId === targetId) return;
 
       const items = menu.items;
@@ -783,6 +847,12 @@ function renderList() {
           insertBlock(items, targetEnd + 1, block);
         }
       }
+      debugLog("dnd:drop:applied", {
+        draggedId,
+        targetId,
+        dropMode: hint.dataset.dropMode,
+        afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
       renderList();
     });
 
@@ -889,6 +959,11 @@ $("#newItemBtn").addEventListener("click", () => {
   if (!menu) return;
   recordHistory(menu);
   menu.items.push({ id: uid(), title: "Nová položka", url: "", level: 0, open: false });
+  debugLog("ui:item:create", {
+    menuId: menu.id,
+    itemCount: menu.items.length,
+    order: menu.items.map(x => ({ id: x.id, level: x.level }))
+  });
   renderList();
   toast("Položka přidána");
 });
@@ -910,6 +985,7 @@ newMenuName.addEventListener("input", () => {
 });
 
 $("#newMenuBtn").addEventListener("click", () => {
+  debugLog("ui:menu-modal:open", { activeMenuId: state.activeMenuId });
   prepareNewMenuModal();
   openModal("newMenuModal");
   newMenuName.focus();
@@ -927,6 +1003,7 @@ newMenuForm.addEventListener("submit", e => {
   const maxDepth = Math.max(0, Math.min(10, Number($("#newMenuDepth").value || 0)));
 
   state.menus.push({ id, name, location, maxDepth, items: [] });
+  debugLog("ui:menu:create", { id, name, location, maxDepth });
   state.activeMenuId = id;
   markDirty(id);
   getHistory(id);
@@ -936,21 +1013,30 @@ newMenuForm.addEventListener("submit", e => {
 });
 
 $("#undoBtn").addEventListener("click", () => {
-  if (!getActiveMenu()) return;
+  const menu = getActiveMenu();
+  if (!menu) return;
+  debugLog("ui:undo", { menuId: menu.id, beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level })) });
   undo();
 });
 $("#redoBtn").addEventListener("click", () => {
-  if (!getActiveMenu()) return;
+  const menu = getActiveMenu();
+  if (!menu) return;
+  debugLog("ui:redo", { menuId: menu.id, beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level })) });
   redo();
 });
 
 $("#saveBtn").addEventListener("click", () => {
   saveState();
   syncSavedSnapshot();
+  debugLog("ui:save", {
+    activeMenuId: state.activeMenuId,
+    menus: state.menus.map(snapshotMenuState)
+  });
   toast("Uloženo do localStorage");
 });
 
 $("#saveAndSwitchBtn").addEventListener("click", () => {
+  debugLog("ui:save-and-switch", { fromMenuId: getActiveMenu()?.id || null, pendingTarget: pendingMenuSwitchId });
   saveState();
   syncSavedSnapshot();
   resolvePendingMenuSwitch();
@@ -960,6 +1046,10 @@ $("#saveAndSwitchBtn").addEventListener("click", () => {
 
 $("#discardAndSwitchBtn").addEventListener("click", () => {
   discardCurrentMenuChanges();
+  debugLog("ui:discard-unsaved", {
+    activeMenuId: state.activeMenuId,
+    pendingTarget: pendingMenuSwitchId
+  });
   resolvePendingMenuSwitch();
   closeModal("unsavedChangesModal");
   toast("Neuložené změny byly zahozeny");
@@ -967,6 +1057,7 @@ $("#discardAndSwitchBtn").addEventListener("click", () => {
 
 $("#previewBtn").addEventListener("click", () => {
   const menu = getActiveMenu();
+  debugLog("ui:preview-open", { menuId: menu?.id || null, itemCount: menu?.items?.length || 0 });
   if (!menu) return;
   const tree = buildPreviewTree(menu.items);
   const rows = renderPreviewMenu(tree);
@@ -994,6 +1085,12 @@ trashDropzone.addEventListener("drop", e => {
   const menu = getActiveMenu();
   recordHistory(menu);
   const removed = removeItemBlock(menu, draggingItemId);
+  debugLog("dnd:trash-drop", {
+    draggedId: draggingItemId,
+    removed,
+    menuId: menu.id,
+    afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+  });
   draggingItemId = null;
   hideTrashDropzone();
   if (removed) {
