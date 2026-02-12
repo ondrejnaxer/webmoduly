@@ -1,6 +1,29 @@
 const STORAGE_KEY = "menu_builder_v1";
 const $ = (s, el = document) => el.querySelector(s);
 
+const DEBUG_MENU_LOG = true;
+function debugLog(action, payload = {}) {
+  if (!DEBUG_MENU_LOG) return;
+  const ts = new Date().toISOString();
+  console.log(`[menu2][${ts}] ${action}`, payload);
+}
+
+function snapshotMenuState(menu) {
+  if (!menu) return null;
+  return {
+    id: menu.id,
+    name: menu.name,
+    location: menu.location,
+    maxDepth: menu.maxDepth,
+    items: (menu.items || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      level: item.level,
+      open: item.open
+    }))
+  };
+}
+
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(2, 6);
 }
@@ -70,6 +93,12 @@ let state = loadState();
 let savedMenusSnapshot = JSON.stringify(state.menus);
 const dirtyMenuIds = new Set();
 let pendingMenuSwitchId = null;
+
+debugLog("state:loaded", {
+  activeMenuId: state.activeMenuId,
+  menuCount: state.menus.length,
+  menus: state.menus.map(snapshotMenuState)
+});
 
 function markDirty(menuId) {
   if (menuId) dirtyMenuIds.add(menuId);
@@ -279,6 +308,11 @@ function renderMenuSelect() {
 
 function requestMenuSwitch(nextMenuId) {
   const currentMenu = getActiveMenu();
+  debugLog("ui:menu-switch:requested", {
+    fromMenuId: currentMenu?.id || null,
+    toMenuId: nextMenuId,
+    hasUnsavedForCurrent: Boolean(currentMenu && dirtyMenuIds.has(currentMenu.id))
+  });
   if (!currentMenu || currentMenu.id === nextMenuId) {
     setActiveMenu(nextMenuId);
     return;
@@ -502,6 +536,11 @@ function renderList() {
 
       // Custom Drag Preview with full subtree
       const menu = getActiveMenu();
+      debugLog("dnd:dragstart", {
+        draggedId: item.id,
+        menuId: menu.id,
+        currentOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
       const idx = menu.items.findIndex(x => x.id === item.id);
       const end = blockEnd(menu.items, idx);
       const movingItems = menu.items.slice(idx, end + 1);
@@ -630,6 +669,15 @@ function renderList() {
       e.preventDefault();
       const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
+      debugLog("dnd:drop:received", {
+        draggedId,
+        targetId,
+        dropMode: hint.dataset.dropMode,
+        dropBefore: hint.dataset.dropBefore,
+        targetHintId: hint.dataset.targetId,
+        menuId: menu.id,
+        beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
       if (!draggedId || draggedId === targetId) return;
 
       const items = menu.items;
@@ -711,6 +759,12 @@ function renderList() {
           insertBlock(items, targetEnd + 1, block);
         }
       }
+      debugLog("dnd:drop:applied", {
+        draggedId,
+        targetId,
+        dropMode: hint.dataset.dropMode,
+        afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
       renderList();
     });
 
@@ -817,6 +871,11 @@ $("#newItemBtn").addEventListener("click", () => {
   if (!menu) return;
   recordHistory(menu);
   menu.items.push({ id: uid(), title: "Nová položka", url: "", level: 0, open: false });
+  debugLog("ui:item:create", {
+    menuId: menu.id,
+    itemCount: menu.items.length,
+    order: menu.items.map(x => ({ id: x.id, level: x.level }))
+  });
   renderList();
   toast("Položka přidána");
 });
@@ -838,6 +897,7 @@ newMenuName.addEventListener("input", () => {
 });
 
 $("#newMenuBtn").addEventListener("click", () => {
+  debugLog("ui:menu-modal:open", { activeMenuId: state.activeMenuId });
   prepareNewMenuModal();
   openModal("newMenuModal");
   newMenuName.focus();
@@ -855,6 +915,7 @@ newMenuForm.addEventListener("submit", e => {
   const maxDepth = Math.max(0, Math.min(10, Number($("#newMenuDepth").value || 0)));
 
   state.menus.push({ id, name, location, maxDepth, items: [] });
+  debugLog("ui:menu:create", { id, name, location, maxDepth });
   state.activeMenuId = id;
   markDirty(id);
   getHistory(id);
@@ -864,21 +925,30 @@ newMenuForm.addEventListener("submit", e => {
 });
 
 $("#undoBtn").addEventListener("click", () => {
-  if (!getActiveMenu()) return;
+  const menu = getActiveMenu();
+  if (!menu) return;
+  debugLog("ui:undo", { menuId: menu.id, beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level })) });
   undo();
 });
 $("#redoBtn").addEventListener("click", () => {
-  if (!getActiveMenu()) return;
+  const menu = getActiveMenu();
+  if (!menu) return;
+  debugLog("ui:redo", { menuId: menu.id, beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level })) });
   redo();
 });
 
 $("#saveBtn").addEventListener("click", () => {
   saveState();
   syncSavedSnapshot();
+  debugLog("ui:save", {
+    activeMenuId: state.activeMenuId,
+    menus: state.menus.map(snapshotMenuState)
+  });
   toast("Uloženo do localStorage");
 });
 
 $("#saveAndSwitchBtn").addEventListener("click", () => {
+  debugLog("ui:save-and-switch", { fromMenuId: getActiveMenu()?.id || null, pendingTarget: pendingMenuSwitchId });
   saveState();
   syncSavedSnapshot();
   resolvePendingMenuSwitch();
@@ -888,6 +958,10 @@ $("#saveAndSwitchBtn").addEventListener("click", () => {
 
 $("#discardAndSwitchBtn").addEventListener("click", () => {
   discardCurrentMenuChanges();
+  debugLog("ui:discard-unsaved", {
+    activeMenuId: state.activeMenuId,
+    pendingTarget: pendingMenuSwitchId
+  });
   resolvePendingMenuSwitch();
   closeModal("unsavedChangesModal");
   toast("Neuložené změny byly zahozeny");
@@ -895,6 +969,7 @@ $("#discardAndSwitchBtn").addEventListener("click", () => {
 
 $("#previewBtn").addEventListener("click", () => {
   const menu = getActiveMenu();
+  debugLog("ui:preview-open", { menuId: menu?.id || null, itemCount: menu?.items?.length || 0 });
   if (!menu) return;
   const tree = buildPreviewTree(menu.items);
   const rows = renderPreviewMenu(tree);
@@ -922,6 +997,12 @@ trashDropzone.addEventListener("drop", e => {
   const menu = getActiveMenu();
   recordHistory(menu);
   const removed = removeItemBlock(menu, draggingItemId);
+  debugLog("dnd:trash-drop", {
+    draggedId: draggingItemId,
+    removed,
+    menuId: menu.id,
+    afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+  });
   draggingItemId = null;
   hideTrashDropzone();
   if (removed) {
