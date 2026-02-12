@@ -40,7 +40,7 @@ function makeDefaultState(){
 
 function normalizeState(parsed){
   const result = parsed && parsed.menus && Array.isArray(parsed.menus) ? parsed : makeDefaultState();
-  result.history = result.history && typeof result.history === "object" ? result.history : {};
+  result.history = {};
 
   result.menus = result.menus.map(menu => ({
     ...menu,
@@ -70,7 +70,12 @@ function loadState(){
 let state = loadState();
 
 function saveState(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const persistedState = {
+    activeMenuId: state.activeMenuId,
+    menus: state.menus,
+    history: {}
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(persistedState));
 }
 
 function getActiveMenu(){
