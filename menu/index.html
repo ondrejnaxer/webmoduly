@@ -17,8 +17,6 @@
 
       <button class="btn" id="newMenuBtn" title="Vytvořit nové menu">Nové menu</button>
       <button class="btn" id="newItemBtn" title="Přidat položku do aktuálního menu">Nová položka</button>
-      <button class="btn" id="undoBtn" title="Zpět">Zpět</button>
-      <button class="btn" id="redoBtn" title="Znovu">Znovu</button>
 
       <div class="spacer"></div>
 
@@ -84,6 +82,21 @@
         <button type="submit" class="btn primary">Vytvořit menu</button>
       </div>
     </form>
+  </div>
+
+
+  <div id="unsavedChangesModal" class="modal confirm-modal" role="dialog" aria-modal="true" aria-labelledby="unsavedChangesTitle" hidden>
+    <div class="modal-head">
+      <h2 id="unsavedChangesTitle">Neuložené úpravy</h2>
+      <button type="button" class="icon-close" data-close-modal="unsavedChangesModal" aria-label="Zavřít">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="confirm-text">Máte neuložené změny. Přejete si je uložit, nebo zahodit?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn primary" id="saveAndSwitchBtn">Uložit</button>
+        <button type="button" class="btn" id="discardAndSwitchBtn">Zahodit změny</button>
+      </div>
+    </div>
   </div>
 
   <div id="previewModal" class="modal preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewTitle" hidden>

@@ -32,38 +32,28 @@ function ensureUniqueMenuId(base){
 
 function makeDefaultState(){
   return {
-    activeMenuId: "default",
-    menus: [{
-      id: "default",
-      name: "My First Menu",
-      location: "header",
-      maxDepth: 2,
-      items: [
-        { id: uid(), title: "Main Page", url: "/", level: 0, open: false },
-        { id: uid(), title: "About", url: "/about", level: 0, open: true },
-        { id: uid(), title: "Contact", url: "/contact", level: 0, open: false },
-        { id: uid(), title: "Parent Page", url: "/parent", level: 0, open: false },
-        { id: uid(), title: "Sub Page 1", url: "/parent/sub1", level: 1, open: false },
-        { id: uid(), title: "Sub Page 2", url: "/parent/sub2", level: 1, open: false }
-      ]
-    }],
+    activeMenuId: null,
+    menus: [],
     history: {}
   };
 }
 
 function normalizeState(parsed){
   const result = parsed && parsed.menus && Array.isArray(parsed.menus) ? parsed : makeDefaultState();
-  result.history = result.history && typeof result.history === "object" ? result.history : {};
+  result.history = {};
 
   result.menus = result.menus.map(menu => ({
     ...menu,
     location: menu.location || "header",
     maxDepth: Number.isInteger(menu.maxDepth) ? menu.maxDepth : 2,
-    items: Array.isArray(menu.items) ? menu.items : []
+    items: (Array.isArray(menu.items) ? menu.items : []).map(item => ({
+      ...item,
+      open: false
+    }))
   }));
 
   if(!result.menus.find(m => m.id === result.activeMenuId)){
-    result.activeMenuId = result.menus[0]?.id;
+    result.activeMenuId = result.menus[0]?.id || null;
   }
 
   return result;
@@ -78,17 +68,35 @@ function loadState(){
 }
 
 let state = loadState();
+let savedMenusSnapshot = JSON.stringify(state.menus);
+const dirtyMenuIds = new Set();
+let pendingMenuSwitchId = null;
+
+function markDirty(menuId){
+  if(menuId) dirtyMenuIds.add(menuId);
+}
+
+function syncSavedSnapshot(){
+  savedMenusSnapshot = JSON.stringify(state.menus);
+  dirtyMenuIds.clear();
+}
 
 function saveState(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const persistedState = {
+    activeMenuId: state.activeMenuId,
+    menus: state.menus,
+    history: {}
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(persistedState));
 }
 
 function getActiveMenu(){
-  return state.menus.find(m => m.id === state.activeMenuId) || state.menus[0];
+  return state.menus.find(m => m.id === state.activeMenuId) || state.menus[0] || null;
 }
 
 function setActiveMenu(id){
-  state.activeMenuId = id;
+  state.activeMenuId = id || null;
+  state.history = {};
   render();
 }
 
@@ -103,6 +111,7 @@ function cloneItems(items){
 
 function recordHistory(menu){
   if(!menu) return;
+  markDirty(menu.id);
   const history = getHistory(menu.id);
   history.undo.push(cloneItems(menu.items));
   history.redo = [];
@@ -129,9 +138,16 @@ function redo(){
 
 function updateUndoRedoButtons(){
   const menu = getActiveMenu();
+  const undoBtn = $("#undoBtn");
+  const redoBtn = $("#redoBtn");
+  if(!menu){
+    undoBtn.disabled = true;
+    redoBtn.disabled = true;
+    return;
+  }
   const history = getHistory(menu.id);
-  $("#undoBtn").disabled = history.undo.length === 0;
-  $("#redoBtn").disabled = history.redo.length === 0;
+  undoBtn.disabled = history.undo.length === 0;
+  redoBtn.disabled = history.redo.length === 0;
 }
 
 function blockEnd(items, startIdx){
@@ -235,6 +251,18 @@ function demote(items, idx, maxDepth){
 function renderMenuSelect(){
   const sel = $("#menuSelect");
   sel.innerHTML = "";
+
+  if(state.menus.length === 0){
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "Žádné menu";
+    sel.appendChild(opt);
+    sel.value = "";
+    sel.disabled = true;
+    return;
+  }
+
+  sel.disabled = false;
   state.menus.forEach(m => {
     const opt = document.createElement("option");
     opt.value = m.id;
@@ -242,7 +270,53 @@ function renderMenuSelect(){
     sel.appendChild(opt);
   });
   if(getActiveMenu()) sel.value = getActiveMenu().id;
-  sel.onchange = () => setActiveMenu(sel.value);
+  sel.onchange = () => requestMenuSwitch(sel.value);
+}
+
+function requestMenuSwitch(nextMenuId){
+  const currentMenu = getActiveMenu();
+  if(!currentMenu || currentMenu.id === nextMenuId){
+    setActiveMenu(nextMenuId);
+    return;
+  }
+
+  if(!dirtyMenuIds.has(currentMenu.id)){
+    setActiveMenu(nextMenuId);
+    return;
+  }
+
+  pendingMenuSwitchId = nextMenuId;
+  $("#menuSelect").value = currentMenu.id;
+  openModal("unsavedChangesModal");
+}
+
+function discardCurrentMenuChanges(){
+  const currentMenu = getActiveMenu();
+  if(!currentMenu) return;
+
+  const savedMenus = JSON.parse(savedMenusSnapshot || "[]");
+  const savedMenu = savedMenus.find(menu => menu.id === currentMenu.id);
+
+  if(savedMenu){
+    const idx = state.menus.findIndex(menu => menu.id === currentMenu.id);
+    if(idx >= 0){
+      state.menus[idx] = {
+        ...savedMenu,
+        items: (savedMenu.items || []).map(item => ({ ...item, open: false }))
+      };
+    }
+  }else{
+    state.menus = state.menus.filter(menu => menu.id !== currentMenu.id);
+  }
+
+  dirtyMenuIds.delete(currentMenu.id);
+}
+
+function resolvePendingMenuSwitch(){
+  if(!pendingMenuSwitchId) return;
+  const targetId = pendingMenuSwitchId;
+  pendingMenuSwitchId = null;
+  setActiveMenu(targetId);
 }
 
 function arrowIcon(){
@@ -262,18 +336,8 @@ function escapeAttr(str){
   return escapeHtml(str).replaceAll("\\n", " ");
 }
 
-function sanitizePreviewHref(url){
-  const value = String(url ?? "").trim();
-  if(!value) return "#";
-  const isRelative = value.startsWith("/") || value.startsWith("./") || value.startsWith("../") || value.startsWith("?") || value.startsWith("#");
-  if(isRelative) return value;
-  const hasScheme = /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(value);
-  if(!hasScheme) return value;
-  try{
-    const { protocol } = new URL(value);
-    if(protocol === "http:" || protocol === "https:") return value;
-  }catch(e){}
-  return "#";
+function sanitizePreviewHref(){
+  return "javascript:void(0)";
 }
 
 const editingGuard = new Set();
@@ -298,9 +362,17 @@ function removeItemBlock(menu, id){
 
 function renderList(){
   const menu = getActiveMenu();
-  if(!menu) return;
   const list = $("#list");
   list.innerHTML = "";
+
+  if(!menu){
+    const empty = document.createElement("div");
+    empty.style.padding = "14px";
+    empty.style.color = "var(--muted)";
+    empty.textContent = "Zatím neexistuje žádné menu. Vytvořte ho tlačítkem „Nové menu“.";
+    list.appendChild(empty);
+    return;
+  }
 
   const hint = document.createElement("div");
   hint.className = "drop-hint";
@@ -330,6 +402,13 @@ function renderList(){
     toggle.innerHTML = arrowIcon();
     toggle.addEventListener("click", e => {
       e.stopPropagation();
+      item.open = !item.open;
+      renderList();
+    });
+
+    head.addEventListener("click", e => {
+      const clickedToggle = e.target.closest(".toggle");
+      if(clickedToggle) return;
       item.open = !item.open;
       renderList();
     });
@@ -476,6 +555,9 @@ function renderList(){
 }
 
 function render(){
+  const hasMenu = Boolean(getActiveMenu());
+  $("#newItemBtn").disabled = !hasMenu;
+  $("#previewBtn").disabled = !hasMenu;
   renderMenuSelect();
   renderList();
 }
@@ -493,16 +575,18 @@ function buildPreviewTree(items){
   return root;
 }
 
-function renderPreviewMenu(nodes){
+function renderPreviewMenu(nodes, depth = 0){
   if(nodes.length === 0) return "";
-  return `<ul class="preview-menu-list">${nodes.map(node => {
+  const listClass = depth === 0 ? "preview-menu-list" : "preview-submenu-list";
+  const submenuClass = depth === 0 ? "preview-submenu depth-1" : "preview-submenu depth-2plus";
+  return `<ul class="${listClass}">${nodes.map(node => {
     const hasChildren = node.children.length > 0;
-    return `<li class="preview-menu-item">
-      <a href="${escapeAttr(sanitizePreviewHref(node.url))}" class="preview-link">
+    return `<li class="preview-menu-item${hasChildren ? " has-children" : ""}">
+      <a href="${escapeAttr(sanitizePreviewHref())}" class="preview-link">
         <span>${escapeHtml(node.title || "(bez názvu)")}</span>
         ${hasChildren ? '<span class="preview-marker">▾</span>' : ''}
       </a>
-      ${hasChildren ? `<div class="preview-submenu">${renderPreviewMenu(node.children)}</div>` : ""}
+      ${hasChildren ? `<div class="${submenuClass}">${renderPreviewMenu(node.children, depth + 1)}</div>` : ""}
     </li>`;
   }).join("")}</ul>`;
 }
@@ -516,12 +600,20 @@ function openModal(modalId){
 
 function closeModal(modalId){
   $(`#${modalId}`).hidden = true;
+  if(modalId === "unsavedChangesModal"){
+    pendingMenuSwitchId = null;
+    const activeMenu = getActiveMenu();
+    if(activeMenu) $("#menuSelect").value = activeMenu.id;
+  }
   const hasOpen = Array.from(document.querySelectorAll(".modal")).some(m => !m.hidden);
   modalBackdrop.hidden = !hasOpen;
 }
 
 modalBackdrop.addEventListener("click", () => {
   document.querySelectorAll(".modal").forEach(modal => { modal.hidden = true; });
+  pendingMenuSwitchId = null;
+  const activeMenu = getActiveMenu();
+  if(activeMenu) $("#menuSelect").value = activeMenu.id;
   modalBackdrop.hidden = true;
 });
 
@@ -532,14 +624,18 @@ document.querySelectorAll("[data-close-modal]").forEach(btn => {
 window.addEventListener("keydown", e => {
   if(e.key === "Escape"){
     document.querySelectorAll(".modal").forEach(modal => { modal.hidden = true; });
+    pendingMenuSwitchId = null;
+    const activeMenu = getActiveMenu();
+    if(activeMenu) $("#menuSelect").value = activeMenu.id;
     modalBackdrop.hidden = true;
   }
 });
 
 $("#newItemBtn").addEventListener("click", () => {
   const menu = getActiveMenu();
+  if(!menu) return;
   recordHistory(menu);
-  menu.items.push({ id: uid(), title: "Nová položka", url: "", level: 0, open: true });
+  menu.items.push({ id: uid(), title: "Nová položka", url: "", level: 0, open: false });
   renderList();
   toast("Položka přidána");
 });
@@ -579,22 +675,46 @@ newMenuForm.addEventListener("submit", e => {
 
   state.menus.push({ id, name, location, maxDepth, items: [] });
   state.activeMenuId = id;
+  markDirty(id);
   getHistory(id);
   closeModal("newMenuModal");
   render();
   toast("Menu vytvořeno");
 });
 
-$("#undoBtn").addEventListener("click", undo);
-$("#redoBtn").addEventListener("click", redo);
+$("#undoBtn").addEventListener("click", () => {
+  if(!getActiveMenu()) return;
+  undo();
+});
+$("#redoBtn").addEventListener("click", () => {
+  if(!getActiveMenu()) return;
+  redo();
+});
 
 $("#saveBtn").addEventListener("click", () => {
   saveState();
+  syncSavedSnapshot();
   toast("Uloženo do localStorage");
+});
+
+$("#saveAndSwitchBtn").addEventListener("click", () => {
+  saveState();
+  syncSavedSnapshot();
+  closeModal("unsavedChangesModal");
+  resolvePendingMenuSwitch();
+  toast("Uloženo do localStorage");
+});
+
+$("#discardAndSwitchBtn").addEventListener("click", () => {
+  discardCurrentMenuChanges();
+  closeModal("unsavedChangesModal");
+  resolvePendingMenuSwitch();
+  toast("Neuložené změny byly zahozeny");
 });
 
 $("#previewBtn").addEventListener("click", () => {
   const menu = getActiveMenu();
+  if(!menu) return;
   const tree = buildPreviewTree(menu.items);
   const rows = renderPreviewMenu(tree);
   $("#previewTitle").textContent = `Náhled: ${menu.name}`;
