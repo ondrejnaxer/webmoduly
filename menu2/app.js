@@ -492,6 +492,75 @@ function removeItemBlock(menu, id) {
   return true;
 }
 
+function applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore) {
+  if (!draggedId || draggedId === targetId) {
+    return { applied: false, reason: "same-item-or-missing" };
+  }
+
+  const items = menu.items;
+  const from = items.findIndex(x => x.id === draggedId);
+  let to = items.findIndex(x => x.id === targetId);
+  if (from < 0 || to < 0) {
+    return { applied: false, reason: "missing-indices" };
+  }
+
+  // Prevent dropping a parent onto itself / its descendants.
+  const rangeEnd = blockEnd(items, from);
+  if (to >= from && to <= rangeEnd) {
+    return { applied: false, reason: "target-inside-dragged-block" };
+  }
+
+  recordHistory(menu);
+
+  const block = items.splice(from, rangeEnd - from + 1);
+  if (from < to) to -= block.length;
+
+  if (dropMode === "parent") {
+    const targetItem = items[to];
+    const desiredLevel = targetItem.level + 1;
+    const levelDiff = desiredLevel - block[0].level;
+
+    const maxDepth = menu.maxDepth || 5;
+    const valid = block.every(x => x.level + levelDiff <= maxDepth);
+    if (!valid) {
+      toast("Nelze vnořit: překročena maximální hloubka");
+      undo();
+      return { applied: false, reason: "max-depth-exceeded" };
+    }
+
+    block.forEach(x => x.level += levelDiff);
+    insertBlock(items, to + 1, block);
+    return { applied: true };
+  }
+
+  const targetItem = items[to];
+  const desiredLevel = targetItem.level;
+  const levelDiff = desiredLevel - block[0].level;
+
+  const maxDepth = menu.maxDepth || 5;
+  const valid = block.every(x => {
+    const newLevel = x.level + levelDiff;
+    return newLevel <= maxDepth && newLevel >= 0;
+  });
+
+  if (!valid) {
+    toast("Nelze přesunout: neplatná úroveň");
+    undo();
+    return { applied: false, reason: "invalid-level" };
+  }
+
+  block.forEach(x => x.level += levelDiff);
+
+  if (dropBefore) {
+    insertBlock(items, to, block);
+  } else {
+    const targetEnd = blockEnd(items, to);
+    insertBlock(items, targetEnd + 1, block);
+  }
+
+  return { applied: true };
+}
+
 function renderList() {
   const menu = getActiveMenu();
   const list = $("#list");
@@ -509,6 +578,53 @@ function renderList() {
   const hint = document.createElement("div");
   hint.className = "drop-hint";
   list.appendChild(hint);
+
+  list.ondragover = e => {
+    if (!hint.classList.contains("show") || !hint.dataset.targetId) return;
+    if (e.target === hint || e.target === list) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+    }
+  };
+
+  list.ondrop = e => {
+    if (!(e.target === hint || e.target === list)) return;
+    if (!hint.dataset.targetId) return;
+
+    e.preventDefault();
+
+    const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
+    const dropMode = hint.dataset.dropMode || "reorder";
+    const dropBefore = hint.dataset.dropBefore === "1";
+    const targetId = hint.dataset.targetId;
+
+    debugLog("dnd:drop:list-fallback", {
+      draggedId,
+      targetId,
+      dropMode,
+      dropBefore,
+      menuId: menu.id
+    });
+
+    const result = applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore);
+    if (result.applied) {
+      debugLog("dnd:drop:applied", {
+        draggedId,
+        targetId,
+        dropMode,
+        afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
+      renderList();
+      return;
+    }
+
+    debugLog("dnd:drop:ignored", {
+      draggedId,
+      targetId,
+      dropMode,
+      reason: result.reason
+    });
+  };
 
   menu.items.forEach(item => {
     const row = document.createElement("div");
@@ -755,102 +871,35 @@ function renderList() {
 
     row.addEventListener("drop", e => {
       e.preventDefault();
+      e.stopPropagation();
       const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
+      const dropMode = hint.dataset.dropMode || "reorder";
+      const dropBefore = hint.dataset.dropBefore === "1";
       debugLog("dnd:drop:received", {
         draggedId,
         targetId,
-        dropMode: hint.dataset.dropMode,
-        dropBefore: hint.dataset.dropBefore,
+        dropMode,
+        dropBefore,
         targetHintId: hint.dataset.targetId,
         menuId: menu.id,
         beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
       });
-      if (!draggedId || draggedId === targetId) return;
 
-      const items = menu.items;
-      const from = items.findIndex(x => x.id === draggedId);
-      let to = items.findIndex(x => x.id === targetId);
-      if (from < 0 || to < 0) return;
-
-      // 1. Check if `to` is inside the range of `from` block (prevent dropping parent on child)
-      const rangeEnd = blockEnd(items, from);
-      if (to >= from && to <= rangeEnd) return;
-
-      recordHistory(menu);
-
-      // Now extract the block
-      const block = items.splice(from, rangeEnd - from + 1);
-
-      // Update `to` index because extraction might have shifted it
-      if (from < to) to -= block.length;
-
-      const dropMode = hint.dataset.dropMode;
-
-      if (dropMode === "parent") {
-        // Drop AS CHILD of target
-        const targetItem = items[to];
-        const desiredLevel = targetItem.level + 1;
-        const levelDiff = desiredLevel - block[0].level;
-
-        const maxDepth = menu.maxDepth || 5;
-        let valid = true;
-        block.forEach(x => {
-          if (x.level + levelDiff > maxDepth) valid = false;
+      const result = applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore);
+      if (!result.applied) {
+        debugLog("dnd:drop:ignored", {
+          draggedId,
+          targetId,
+          dropMode,
+          reason: result.reason
         });
-
-        if (!valid) {
-          toast("Nelze vnořit: překročena maximální hloubka");
-          undo();
-          return;
-        }
-
-        // Apply level change
-        block.forEach(x => x.level += levelDiff);
-
-        // Insert AFTER target (as first child)
-        insertBlock(items, to + 1, block);
-
-        // Auto-open is intentionally removed on user request
-        // targetItem.open = true;
-
-      } else {
-        // Reorder logic
-        const targetItem = items[to];
-
-        // Adjust level to match the new sibling
-        const desiredLevel = targetItem.level;
-        const levelDiff = desiredLevel - block[0].level;
-
-        // Validation check
-        const maxDepth = menu.maxDepth || 5;
-        let valid = true;
-        block.forEach(x => {
-          const newLevel = x.level + levelDiff;
-          if (newLevel > maxDepth || newLevel < 0) valid = false;
-        });
-
-        if (!valid) {
-          toast("Nelze přesunout: neplatná úroveň");
-          undo();
-          return;
-        }
-
-        // Apply level change
-        block.forEach(x => x.level += levelDiff);
-
-        const before = hint.dataset.dropBefore === "1";
-        if (before) {
-          insertBlock(items, to, block);
-        } else {
-          const targetEnd = blockEnd(items, to);
-          insertBlock(items, targetEnd + 1, block);
-        }
+        return;
       }
       debugLog("dnd:drop:applied", {
         draggedId,
         targetId,
-        dropMode: hint.dataset.dropMode,
+        dropMode,
         afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
       });
       renderList();
