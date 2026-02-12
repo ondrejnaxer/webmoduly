@@ -628,7 +628,7 @@ function renderList() {
 
     row.addEventListener("drop", e => {
       e.preventDefault();
-      const draggedId = e.dataTransfer.getData("text/plain");
+      const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
       if (!draggedId || draggedId === targetId) return;
 
