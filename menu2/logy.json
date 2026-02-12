@@ -1,0 +1,1365 @@
+{
+  "exportedAt": "2026-02-12T20:18:28.800Z",
+  "entryCount": 29,
+  "entries": [
+    {
+      "timestamp": "2026-02-12T20:16:50.632Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:16:50.632Z] state:loaded",
+        {
+          "activeMenuId": "default",
+          "menuCount": 1,
+          "menus": [
+            {
+              "id": "default",
+              "name": "My First Menu",
+              "location": "header",
+              "maxDepth": 2,
+              "items": [
+                {
+                  "id": "q5gcmoghi3hs",
+                  "title": "Home",
+                  "level": 0,
+                  "open": false
+                },
+                {
+                  "id": "69iwjkb3i3hs",
+                  "title": "Blog",
+                  "level": 0,
+                  "open": false
+                },
+                {
+                  "id": "fxc557rci3hs",
+                  "title": "Hobbies",
+                  "level": 0,
+                  "open": false
+                },
+                {
+                  "id": "og5oid3ui3hs",
+                  "title": "Gardening",
+                  "level": 1,
+                  "open": false
+                },
+                {
+                  "id": "zhqfnfhsi3hs",
+                  "title": "Skiing",
+                  "level": 1,
+                  "open": false
+                },
+                {
+                  "id": "lw6umxq3i4aj",
+                  "title": "Cross country",
+                  "level": 2,
+                  "open": false
+                },
+                {
+                  "id": "rkc1amsyi497",
+                  "title": "Alpine",
+                  "level": 2,
+                  "open": false
+                },
+                {
+                  "id": "ylndap6ji3hs",
+                  "title": "Contact",
+                  "level": 0,
+                  "open": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:03.264Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:03.264Z] dnd:dragstart",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:08.580Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:08.580Z] dnd:dragstart",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:12.548Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:12.548Z] dnd:drop:received",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "targetId": "fxc557rci3hs",
+          "dropMode": "reorder",
+          "dropBefore": "1",
+          "targetHintId": "fxc557rci3hs",
+          "menuId": "default",
+          "beforeOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:12.548Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:12.548Z] dnd:drop:applied",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "targetId": "fxc557rci3hs",
+          "dropMode": "reorder",
+          "afterOrder": [
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:15.121Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:15.121Z] dnd:dragstart",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:15.840Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:15.840Z] dnd:drop:received",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "targetId": "69iwjkb3i3hs",
+          "dropMode": "reorder",
+          "dropBefore": "1",
+          "targetHintId": "69iwjkb3i3hs",
+          "menuId": "default",
+          "beforeOrder": [
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:15.840Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:15.840Z] dnd:drop:applied",
+        {
+          "draggedId": "q5gcmoghi3hs",
+          "targetId": "69iwjkb3i3hs",
+          "dropMode": "reorder",
+          "afterOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:18.696Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:18.696Z] dnd:dragstart",
+        {
+          "draggedId": "69iwjkb3i3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:21.192Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:21.192Z] dnd:dragstart",
+        {
+          "draggedId": "69iwjkb3i3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:23.828Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:23.828Z] dnd:dragstart",
+        {
+          "draggedId": "ylndap6ji3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:26.545Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:26.545Z] dnd:dragstart",
+        {
+          "draggedId": "ylndap6ji3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:30.061Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:30.061Z] dnd:dragstart",
+        {
+          "draggedId": "69iwjkb3i3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:32.095Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:32.095Z] dnd:dragstart",
+        {
+          "draggedId": "69iwjkb3i3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:33.994Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:33.994Z] dnd:dragstart",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:35.304Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:35.304Z] dnd:drop:received",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "targetId": "69iwjkb3i3hs",
+          "dropMode": "parent",
+          "dropBefore": "0",
+          "targetHintId": "69iwjkb3i3hs",
+          "menuId": "default",
+          "beforeOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:35.304Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:35.304Z] dnd:drop:applied",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "targetId": "69iwjkb3i3hs",
+          "dropMode": "parent",
+          "afterOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:37.278Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:37.278Z] dnd:dragstart",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:39.593Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:39.593Z] dnd:dragstart",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:41.978Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:41.977Z] dnd:dragstart",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:43.448Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:43.448Z] dnd:drop:received",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "targetId": "fxc557rci3hs",
+          "dropMode": "parent",
+          "dropBefore": "0",
+          "targetHintId": "fxc557rci3hs",
+          "menuId": "default",
+          "beforeOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:43.448Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:43.448Z] dnd:drop:applied",
+        {
+          "draggedId": "zhqfnfhsi3hs",
+          "targetId": "fxc557rci3hs",
+          "dropMode": "parent",
+          "afterOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:45.093Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:45.093Z] dnd:dragstart",
+        {
+          "draggedId": "og5oid3ui3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:47.811Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:47.810Z] dnd:dragstart",
+        {
+          "draggedId": "og5oid3ui3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:49.074Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:49.074Z] dnd:drop:received",
+        {
+          "draggedId": "og5oid3ui3hs",
+          "targetId": "zhqfnfhsi3hs",
+          "dropMode": "reorder",
+          "dropBefore": "1",
+          "targetHintId": "zhqfnfhsi3hs",
+          "menuId": "default",
+          "beforeOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:17:49.074Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:17:49.074Z] dnd:drop:applied",
+        {
+          "draggedId": "og5oid3ui3hs",
+          "targetId": "zhqfnfhsi3hs",
+          "dropMode": "reorder",
+          "afterOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:18:01.663Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:18:01.663Z] dnd:dragstart",
+        {
+          "draggedId": "ylndap6ji3hs",
+          "menuId": "default",
+          "currentOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:18:02.544Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:18:02.544Z] dnd:drop:received",
+        {
+          "draggedId": "ylndap6ji3hs",
+          "targetId": "fxc557rci3hs",
+          "dropMode": "reorder",
+          "dropBefore": "1",
+          "targetHintId": "fxc557rci3hs",
+          "menuId": "default",
+          "beforeOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-02-12T20:18:02.545Z",
+      "level": "log",
+      "args": [
+        "[menu2][2026-02-12T20:18:02.545Z] dnd:drop:applied",
+        {
+          "draggedId": "ylndap6ji3hs",
+          "targetId": "fxc557rci3hs",
+          "dropMode": "reorder",
+          "afterOrder": [
+            {
+              "id": "q5gcmoghi3hs",
+              "level": 0
+            },
+            {
+              "id": "69iwjkb3i3hs",
+              "level": 0
+            },
+            {
+              "id": "ylndap6ji3hs",
+              "level": 0
+            },
+            {
+              "id": "fxc557rci3hs",
+              "level": 0
+            },
+            {
+              "id": "og5oid3ui3hs",
+              "level": 1
+            },
+            {
+              "id": "zhqfnfhsi3hs",
+              "level": 1
+            },
+            {
+              "id": "lw6umxq3i4aj",
+              "level": 2
+            },
+            {
+              "id": "rkc1amsyi497",
+              "level": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
