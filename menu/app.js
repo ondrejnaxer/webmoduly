@@ -346,6 +346,7 @@ function sanitizePreviewHref(){
 const editingGuard = new Set();
 const trashDropzone = $("#trashDropzone");
 let draggingItemId = null;
+let draggingPreviewEl = null;
 
 function showTrashDropzone(){
   trashDropzone.classList.add("show");
@@ -490,6 +491,21 @@ function renderList(){
         e.preventDefault();
         return;
       }
+
+      const preview = card.cloneNode(true);
+      preview.style.position = "fixed";
+      preview.style.top = "-1000px";
+      preview.style.left = "-1000px";
+      preview.style.width = `${card.getBoundingClientRect().width}px`;
+      preview.style.pointerEvents = "none";
+      preview.classList.remove("open");
+      preview.classList.add("drag-preview");
+      document.body.appendChild(preview);
+      draggingPreviewEl = preview;
+
+      const headRect = head.getBoundingClientRect();
+      e.dataTransfer.setDragImage(preview, e.clientX - headRect.left, e.clientY - headRect.top);
+
       card.classList.add("dragging");
       draggingItemId = item.id;
       showTrashDropzone();
@@ -499,6 +515,8 @@ function renderList(){
 
     head.addEventListener("dragend", () => {
       card.classList.remove("dragging");
+      draggingPreviewEl?.remove();
+      draggingPreviewEl = null;
       draggingItemId = null;
       hint.classList.remove("show");
       hideTrashDropzone();
