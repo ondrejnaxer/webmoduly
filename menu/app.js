@@ -389,11 +389,11 @@ function renderList(){
 
     const card = document.createElement("div");
     card.className = "menu-item" + (item.open ? " open" : "");
-    card.draggable = false;
+    card.draggable = true;
 
     const head = document.createElement("div");
     head.className = "head";
-    head.draggable = true;
+    head.draggable = false;
 
     const title = document.createElement("div");
     title.className = "title";
@@ -485,35 +485,27 @@ function renderList(){
 
     card.appendChild(details);
 
-    head.addEventListener("dragstart", e => {
+    card.addEventListener("dragstart", e => {
       const selection = window.getSelection();
       if(selection && !selection.isCollapsed){
         e.preventDefault();
         return;
       }
 
-      const preview = card.cloneNode(true);
-      preview.style.position = "fixed";
-      preview.style.top = "-1000px";
-      preview.style.left = "-1000px";
-      preview.style.width = `${card.getBoundingClientRect().width}px`;
-      preview.style.pointerEvents = "none";
-      preview.classList.remove("open");
-      preview.classList.add("drag-preview");
-      document.body.appendChild(preview);
-      draggingPreviewEl = preview;
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", item.id);
 
-      const headRect = head.getBoundingClientRect();
-      e.dataTransfer.setDragImage(preview, e.clientX - headRect.left, e.clientY - headRect.top);
+      const cardRect = card.getBoundingClientRect();
+      const grabX = Math.min(Math.max(e.clientX - cardRect.left, 0), cardRect.width);
+      const grabY = Math.min(Math.max(e.clientY - cardRect.top, 0), cardRect.height);
+      e.dataTransfer.setDragImage(card, grabX, grabY);
 
       card.classList.add("dragging");
       draggingItemId = item.id;
       showTrashDropzone();
-      e.dataTransfer.effectAllowed = "move";
-      e.dataTransfer.setData("text/plain", item.id);
     });
 
-    head.addEventListener("dragend", () => {
+    card.addEventListener("dragend", () => {
       card.classList.remove("dragging");
       draggingPreviewEl?.remove();
       draggingPreviewEl = null;
