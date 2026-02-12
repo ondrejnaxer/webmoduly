@@ -346,6 +346,7 @@ function sanitizePreviewHref(){
 const editingGuard = new Set();
 const trashDropzone = $("#trashDropzone");
 let draggingItemId = null;
+let draggingPreviewEl = null;
 
 function showTrashDropzone(){
   trashDropzone.classList.add("show");
@@ -506,6 +507,8 @@ function renderList(){
 
     card.addEventListener("dragend", () => {
       card.classList.remove("dragging");
+      draggingPreviewEl?.remove();
+      draggingPreviewEl = null;
       draggingItemId = null;
       hint.classList.remove("show");
       hideTrashDropzone();
