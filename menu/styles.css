@@ -82,14 +82,21 @@ select:focus,input:focus{border-color:rgba(34,113,177,.6);box-shadow:0 0 0 3px r
 .modal-body label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
 
-.preview-modal{width:min(820px,calc(100vw - 24px))}
-.preview-nav{background:#fff;border:1px solid var(--border);border-radius:8px;padding:10px;overflow:auto}
-.preview-menu-list{list-style:none;margin:0;padding:0}
+.preview-modal{width:min(920px,calc(100vw - 24px));min-height:420px}
+.preview-nav{background:#fff;border:1px solid var(--border);border-radius:8px;padding:0;overflow:visible;min-height:320px}
+.preview-menu-list,.preview-submenu-list{list-style:none;margin:0;padding:0}
+.preview-menu-list{display:flex;align-items:stretch}
+.preview-submenu-list{min-width:170px}
 .preview-menu-item{position:relative}
-.preview-link{display:flex;align-items:center;gap:8px;padding:9px 10px;color:var(--text);text-decoration:none;font-weight:600;border-radius:6px}
-.preview-link:hover{background:#f0f2f5;color:var(--blue)}
-.preview-marker{color:var(--muted);font-size:12px;margin-left:auto}
-.preview-submenu{padding-left:18px}
+.preview-link{display:flex;align-items:center;gap:8px;padding:12px 16px;color:var(--text);text-decoration:none;font-weight:500;white-space:nowrap}
+.preview-link:hover{background:#f0f2f5;color:var(--text)}
+.preview-marker{color:var(--text);font-size:12px}
+.preview-submenu{display:none;background:#fff;border:1px solid #c3c4c7;border-radius:6px;box-shadow:0 8px 16px rgba(0,0,0,.08);z-index:3}
+.preview-menu-item.has-children:hover>.preview-submenu{display:block}
+.preview-submenu.depth-1{position:absolute;top:100%;left:0;min-width:170px}
+.preview-submenu.depth-2plus{position:absolute;top:0;left:100%;min-width:170px}
+.preview-submenu .preview-link{padding:12px 16px;font-weight:400}
+.preview-submenu .preview-link:hover{background:#f0f2f5}
 
 .toast{position:fixed;right:16px;bottom:16px;background:rgba(29,35,39,.94);color:#fff;padding:10px 12px;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.25);font-size:13px;transform:translateY(12px);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
 .toast.show{opacity:1;transform:translateY(0)}
