@@ -1,79 +1,6 @@
 const STORAGE_KEY = "menu_builder_v1";
 const $ = (s, el = document) => el.querySelector(s);
 
-// --- DEBUG LOGIC START ---
-(function () {
-  function blockEnd(items, startIdx) {
-    const base = items[startIdx].level;
-    let end = startIdx;
-    for (let i = startIdx + 1; i < items.length; i++) {
-      if (items[i].level <= base) break;
-      end = i;
-    }
-    return end;
-  }
-
-  function insertBlock(items, idx, block) {
-    items.splice(idx, 0, ...block);
-  }
-
-  function runTest(testName, itemsInput, fromId, toId, dropBefore) {
-    console.log(`%c[TEST] ${testName}`, "color: blue; font-weight: bold");
-    let items = JSON.parse(JSON.stringify(itemsInput));
-
-    const from = items.findIndex(x => x.id === fromId);
-    let to = items.findIndex(x => x.id === toId);
-
-    console.log(`Initial:`, items.map(x => `${x.id}(${x.level})`));
-
-    if (from < 0 || to < 0) { console.error("Invalid Indices"); return; }
-    const rangeEnd = blockEnd(items, from);
-    const block = items.splice(from, rangeEnd - from + 1);
-
-    if (from < to) to -= block.length;
-
-    const targetItem = items[to];
-    // Logic under test:
-    let desiredLevel = targetItem.level;
-    const levelDiff = desiredLevel - block[0].level;
-
-    console.log(`Moving ${fromId} ${dropBefore ? 'BEFORE' : 'AFTER'} ${toId}. Diff: ${levelDiff}`);
-
-    block.forEach(x => {
-      // Validation check simulation
-      const newLevel = x.level + levelDiff;
-      if (newLevel < 0 || newLevel > 5) console.error("INVALID LEVEL DETECTED", x.id, newLevel);
-    });
-
-    block.forEach(x => x.level += levelDiff);
-
-    if (dropBefore) {
-      insertBlock(items, to, block);
-    } else {
-      const targetEnd = blockEnd(items, to);
-      insertBlock(items, targetEnd + 1, block);
-    }
-
-    console.log(`Result:`, items.map(x => `${x.id}(${x.level})`));
-  }
-
-  const items = [
-    { id: "Sub2", level: 2 },
-    { id: "Main", level: 0 }
-  ];
-  // runTest("User Scenario Simplified", items, "Sub2", "Main", true);
-
-  const complexItems = [
-    { id: "Root", level: 0 },
-    { id: "Sub1", level: 1 },
-    { id: "Sub2", level: 2 }, // Drag this
-    { id: "Main", level: 0 }  // To here
-  ];
-  // runTest("User Scenario Complex", complexItems, "Sub2", "Main", true);
-})();
-// --- DEBUG LOGIC END ---
-
-
 function uid() {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(2, 6);
 }
@@ -125,7 +52,8 @@ function normalizeState(parsed) {
     }))
   }));
 
-  result.activeMenuId = result.menus[0]?.id || null;
+  const hasPersistedActiveMenu = result.menus.some(menu => menu.id === result.activeMenuId);
+  result.activeMenuId = hasPersistedActiveMenu ? result.activeMenuId : (result.menus[0]?.id || null);
 
   return result;
 }
@@ -409,7 +337,7 @@ function escapeHtml(str) {
 }
 
 function escapeAttr(str) {
-  return escapeHtml(str).replaceAll("\\n", " ");
+  return escapeHtml(str).replaceAll("\n", " ");
 }
 
 function sanitizePreviewHref() {
@@ -700,7 +628,7 @@ function renderList() {
 
     row.addEventListener("drop", e => {
       e.preventDefault();
-      const draggedId = e.dataTransfer.getData("text/plain");
+      const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
       if (!draggedId || draggedId === targetId) return;
 
