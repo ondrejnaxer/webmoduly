@@ -52,9 +52,7 @@ function normalizeState(parsed){
     }))
   }));
 
-  if(!result.menus.find(m => m.id === result.activeMenuId)){
-    result.activeMenuId = result.menus[0]?.id || null;
-  }
+  result.activeMenuId = result.menus[0]?.id || null;
 
   return result;
 }
@@ -79,6 +77,11 @@ function markDirty(menuId){
 function syncSavedSnapshot(){
   savedMenusSnapshot = JSON.stringify(state.menus);
   dirtyMenuIds.clear();
+}
+
+function hasUnsavedChanges(){
+  if(dirtyMenuIds.size > 0) return true;
+  return JSON.stringify(state.menus) !== savedMenusSnapshot;
 }
 
 function saveState(){
@@ -629,6 +632,12 @@ window.addEventListener("keydown", e => {
     if(activeMenu) $("#menuSelect").value = activeMenu.id;
     modalBackdrop.hidden = true;
   }
+});
+
+window.addEventListener("beforeunload", e => {
+  if(!hasUnsavedChanges()) return;
+  e.preventDefault();
+  e.returnValue = "";
 });
 
 $("#newItemBtn").addEventListener("click", () => {
