@@ -472,6 +472,7 @@ let draggingItemId = null;
 let dragPreview = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
+let activeDropContext = null;
 
 const emptyDragImage = new Image();
 emptyDragImage.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -492,6 +493,87 @@ function removeItemBlock(menu, id) {
   return true;
 }
 
+function setActiveDropContext(targetId, dropMode, dropBefore) {
+  activeDropContext = {
+    targetId,
+    dropMode: dropMode || "reorder",
+    dropBefore: Boolean(dropBefore)
+  };
+}
+
+function clearActiveDropContext() {
+  activeDropContext = null;
+}
+
+function applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore) {
+  if (!draggedId || draggedId === targetId) {
+    return { applied: false, reason: "same-item-or-missing" };
+  }
+
+  const items = menu.items;
+  const from = items.findIndex(x => x.id === draggedId);
+  let to = items.findIndex(x => x.id === targetId);
+  if (from < 0 || to < 0) {
+    return { applied: false, reason: "missing-indices" };
+  }
+
+  // Prevent dropping a parent onto itself / its descendants.
+  const rangeEnd = blockEnd(items, from);
+  if (to >= from && to <= rangeEnd) {
+    return { applied: false, reason: "target-inside-dragged-block" };
+  }
+
+  recordHistory(menu);
+
+  const block = items.splice(from, rangeEnd - from + 1);
+  if (from < to) to -= block.length;
+
+  if (dropMode === "parent") {
+    const targetItem = items[to];
+    const desiredLevel = targetItem.level + 1;
+    const levelDiff = desiredLevel - block[0].level;
+
+    const maxDepth = menu.maxDepth || 5;
+    const valid = block.every(x => x.level + levelDiff <= maxDepth);
+    if (!valid) {
+      toast("Nelze vnořit: překročena maximální hloubka");
+      undo();
+      return { applied: false, reason: "max-depth-exceeded" };
+    }
+
+    block.forEach(x => x.level += levelDiff);
+    insertBlock(items, to + 1, block);
+    return { applied: true };
+  }
+
+  const targetItem = items[to];
+  const desiredLevel = targetItem.level;
+  const levelDiff = desiredLevel - block[0].level;
+
+  const maxDepth = menu.maxDepth || 5;
+  const valid = block.every(x => {
+    const newLevel = x.level + levelDiff;
+    return newLevel <= maxDepth && newLevel >= 0;
+  });
+
+  if (!valid) {
+    toast("Nelze přesunout: neplatná úroveň");
+    undo();
+    return { applied: false, reason: "invalid-level" };
+  }
+
+  block.forEach(x => x.level += levelDiff);
+
+  if (dropBefore) {
+    insertBlock(items, to, block);
+  } else {
+    const targetEnd = blockEnd(items, to);
+    insertBlock(items, targetEnd + 1, block);
+  }
+
+  return { applied: true };
+}
+
 function renderList() {
   const menu = getActiveMenu();
   const list = $("#list");
@@ -509,6 +591,51 @@ function renderList() {
   const hint = document.createElement("div");
   hint.className = "drop-hint";
   list.appendChild(hint);
+  clearActiveDropContext();
+
+  list.ondragover = e => {
+    if (!draggingItemId || !activeDropContext?.targetId) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  list.ondrop = e => {
+    if (!draggingItemId || !activeDropContext?.targetId) return;
+
+    e.preventDefault();
+
+    const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
+    const dropMode = activeDropContext.dropMode;
+    const dropBefore = activeDropContext.dropBefore;
+    const targetId = activeDropContext.targetId;
+
+    debugLog("dnd:drop:list-fallback", {
+      draggedId,
+      targetId,
+      dropMode,
+      dropBefore,
+      menuId: menu.id
+    });
+
+    const result = applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore);
+    if (result.applied) {
+      debugLog("dnd:drop:applied", {
+        draggedId,
+        targetId,
+        dropMode,
+        afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+      });
+      renderList();
+      return;
+    }
+
+    debugLog("dnd:drop:ignored", {
+      draggedId,
+      targetId,
+      dropMode,
+      reason: result.reason
+    });
+  };
 
   menu.items.forEach(item => {
     const row = document.createElement("div");
@@ -621,6 +748,7 @@ function renderList() {
       }
       card.classList.add("dragging");
       draggingItemId = item.id;
+      clearActiveDropContext();
 
       // Custom Drag Preview with full subtree
       const menu = getActiveMenu();
@@ -695,6 +823,7 @@ function renderList() {
         rafId = null;
       }
       hint.classList.remove("show");
+      clearActiveDropContext();
       hideTrashDropzone();
     });
 
@@ -739,6 +868,7 @@ function renderList() {
         hint.style.marginLeft = `${item.level * 30}px`;
       }
       hint.dataset.targetId = item.id;
+      setActiveDropContext(item.id, mode, insertBefore);
     });
 
     row.addEventListener("dragleave", e => {
@@ -755,102 +885,42 @@ function renderList() {
 
     row.addEventListener("drop", e => {
       e.preventDefault();
+      e.stopPropagation();
       const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
+      const rowContext = activeDropContext?.targetId === item.id
+        ? activeDropContext
+        : {
+          targetId: item.id,
+          dropMode: hint.dataset.dropMode || "reorder",
+          dropBefore: hint.dataset.dropBefore === "1"
+        };
+      const dropMode = rowContext.dropMode;
+      const dropBefore = rowContext.dropBefore;
       debugLog("dnd:drop:received", {
         draggedId,
         targetId,
-        dropMode: hint.dataset.dropMode,
-        dropBefore: hint.dataset.dropBefore,
+        dropMode,
+        dropBefore,
         targetHintId: hint.dataset.targetId,
         menuId: menu.id,
         beforeOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
       });
-      if (!draggedId || draggedId === targetId) return;
 
-      const items = menu.items;
-      const from = items.findIndex(x => x.id === draggedId);
-      let to = items.findIndex(x => x.id === targetId);
-      if (from < 0 || to < 0) return;
-
-      // 1. Check if `to` is inside the range of `from` block (prevent dropping parent on child)
-      const rangeEnd = blockEnd(items, from);
-      if (to >= from && to <= rangeEnd) return;
-
-      recordHistory(menu);
-
-      // Now extract the block
-      const block = items.splice(from, rangeEnd - from + 1);
-
-      // Update `to` index because extraction might have shifted it
-      if (from < to) to -= block.length;
-
-      const dropMode = hint.dataset.dropMode;
-
-      if (dropMode === "parent") {
-        // Drop AS CHILD of target
-        const targetItem = items[to];
-        const desiredLevel = targetItem.level + 1;
-        const levelDiff = desiredLevel - block[0].level;
-
-        const maxDepth = menu.maxDepth || 5;
-        let valid = true;
-        block.forEach(x => {
-          if (x.level + levelDiff > maxDepth) valid = false;
+      const result = applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore);
+      if (!result.applied) {
+        debugLog("dnd:drop:ignored", {
+          draggedId,
+          targetId,
+          dropMode,
+          reason: result.reason
         });
-
-        if (!valid) {
-          toast("Nelze vnořit: překročena maximální hloubka");
-          undo();
-          return;
-        }
-
-        // Apply level change
-        block.forEach(x => x.level += levelDiff);
-
-        // Insert AFTER target (as first child)
-        insertBlock(items, to + 1, block);
-
-        // Auto-open is intentionally removed on user request
-        // targetItem.open = true;
-
-      } else {
-        // Reorder logic
-        const targetItem = items[to];
-
-        // Adjust level to match the new sibling
-        const desiredLevel = targetItem.level;
-        const levelDiff = desiredLevel - block[0].level;
-
-        // Validation check
-        const maxDepth = menu.maxDepth || 5;
-        let valid = true;
-        block.forEach(x => {
-          const newLevel = x.level + levelDiff;
-          if (newLevel > maxDepth || newLevel < 0) valid = false;
-        });
-
-        if (!valid) {
-          toast("Nelze přesunout: neplatná úroveň");
-          undo();
-          return;
-        }
-
-        // Apply level change
-        block.forEach(x => x.level += levelDiff);
-
-        const before = hint.dataset.dropBefore === "1";
-        if (before) {
-          insertBlock(items, to, block);
-        } else {
-          const targetEnd = blockEnd(items, to);
-          insertBlock(items, targetEnd + 1, block);
-        }
+        return;
       }
       debugLog("dnd:drop:applied", {
         draggedId,
         targetId,
-        dropMode: hint.dataset.dropMode,
+        dropMode,
         afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
       });
       renderList();
@@ -1121,6 +1191,58 @@ document.addEventListener("dragover", e => {
       rafId = requestAnimationFrame(updateDragPreviewPosition);
     }
   }
+});
+
+document.addEventListener("drop", e => {
+  if (e.defaultPrevented) return;
+  if (!draggingItemId || !activeDropContext?.targetId) return;
+
+  const targetEl = e.target;
+  if (targetEl instanceof Element && targetEl.closest("#trashDropzone")) return;
+
+  const list = $("#list");
+  if (!list) return;
+
+  const rect = list.getBoundingClientRect();
+  const edgeSlack = 64;
+  const withinHorizontal = e.clientX >= rect.left && e.clientX <= rect.right;
+  const withinVertical = e.clientY >= rect.top - edgeSlack && e.clientY <= rect.bottom + edgeSlack;
+  if (!withinHorizontal || !withinVertical) return;
+
+  const menu = getActiveMenu();
+  if (!menu) return;
+
+  e.preventDefault();
+
+  const draggedId = e.dataTransfer?.getData("text/plain") || draggingItemId;
+  const { targetId, dropMode, dropBefore } = activeDropContext;
+
+  debugLog("dnd:drop:document-fallback", {
+    draggedId,
+    targetId,
+    dropMode,
+    dropBefore,
+    menuId: menu.id
+  });
+
+  const result = applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore);
+  if (!result.applied) {
+    debugLog("dnd:drop:ignored", {
+      draggedId,
+      targetId,
+      dropMode,
+      reason: result.reason
+    });
+    return;
+  }
+
+  debugLog("dnd:drop:applied", {
+    draggedId,
+    targetId,
+    dropMode,
+    afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+  });
+  renderList();
 });
 
 render();
