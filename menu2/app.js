@@ -472,6 +472,7 @@ let draggingItemId = null;
 let dragPreview = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
+let activeDropContext = null;
 
 const emptyDragImage = new Image();
 emptyDragImage.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -490,6 +491,18 @@ function removeItemBlock(menu, id) {
   const end = blockEnd(menu.items, idxNow);
   menu.items.splice(idxNow, end - idxNow + 1);
   return true;
+}
+
+function setActiveDropContext(targetId, dropMode, dropBefore) {
+  activeDropContext = {
+    targetId,
+    dropMode: dropMode || "reorder",
+    dropBefore: Boolean(dropBefore)
+  };
+}
+
+function clearActiveDropContext() {
+  activeDropContext = null;
 }
 
 function applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore) {
@@ -578,25 +591,23 @@ function renderList() {
   const hint = document.createElement("div");
   hint.className = "drop-hint";
   list.appendChild(hint);
+  clearActiveDropContext();
 
   list.ondragover = e => {
-    if (!hint.classList.contains("show") || !hint.dataset.targetId) return;
-    if (e.target === hint || e.target === list) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-    }
+    if (!draggingItemId || !activeDropContext?.targetId) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
   };
 
   list.ondrop = e => {
-    if (!(e.target === hint || e.target === list)) return;
-    if (!hint.dataset.targetId) return;
+    if (!draggingItemId || !activeDropContext?.targetId) return;
 
     e.preventDefault();
 
     const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
-    const dropMode = hint.dataset.dropMode || "reorder";
-    const dropBefore = hint.dataset.dropBefore === "1";
-    const targetId = hint.dataset.targetId;
+    const dropMode = activeDropContext.dropMode;
+    const dropBefore = activeDropContext.dropBefore;
+    const targetId = activeDropContext.targetId;
 
     debugLog("dnd:drop:list-fallback", {
       draggedId,
@@ -737,6 +748,7 @@ function renderList() {
       }
       card.classList.add("dragging");
       draggingItemId = item.id;
+      clearActiveDropContext();
 
       // Custom Drag Preview with full subtree
       const menu = getActiveMenu();
@@ -811,6 +823,7 @@ function renderList() {
         rafId = null;
       }
       hint.classList.remove("show");
+      clearActiveDropContext();
       hideTrashDropzone();
     });
 
@@ -855,6 +868,7 @@ function renderList() {
         hint.style.marginLeft = `${item.level * 30}px`;
       }
       hint.dataset.targetId = item.id;
+      setActiveDropContext(item.id, mode, insertBefore);
     });
 
     row.addEventListener("dragleave", e => {
@@ -874,8 +888,15 @@ function renderList() {
       e.stopPropagation();
       const draggedId = e.dataTransfer.getData("text/plain") || draggingItemId;
       const targetId = item.id;
-      const dropMode = hint.dataset.dropMode || "reorder";
-      const dropBefore = hint.dataset.dropBefore === "1";
+      const rowContext = activeDropContext?.targetId === item.id
+        ? activeDropContext
+        : {
+          targetId: item.id,
+          dropMode: hint.dataset.dropMode || "reorder",
+          dropBefore: hint.dataset.dropBefore === "1"
+        };
+      const dropMode = rowContext.dropMode;
+      const dropBefore = rowContext.dropBefore;
       debugLog("dnd:drop:received", {
         draggedId,
         targetId,
@@ -1170,6 +1191,58 @@ document.addEventListener("dragover", e => {
       rafId = requestAnimationFrame(updateDragPreviewPosition);
     }
   }
+});
+
+document.addEventListener("drop", e => {
+  if (e.defaultPrevented) return;
+  if (!draggingItemId || !activeDropContext?.targetId) return;
+
+  const targetEl = e.target;
+  if (targetEl instanceof Element && targetEl.closest("#trashDropzone")) return;
+
+  const list = $("#list");
+  if (!list) return;
+
+  const rect = list.getBoundingClientRect();
+  const edgeSlack = 64;
+  const withinHorizontal = e.clientX >= rect.left && e.clientX <= rect.right;
+  const withinVertical = e.clientY >= rect.top - edgeSlack && e.clientY <= rect.bottom + edgeSlack;
+  if (!withinHorizontal || !withinVertical) return;
+
+  const menu = getActiveMenu();
+  if (!menu) return;
+
+  e.preventDefault();
+
+  const draggedId = e.dataTransfer?.getData("text/plain") || draggingItemId;
+  const { targetId, dropMode, dropBefore } = activeDropContext;
+
+  debugLog("dnd:drop:document-fallback", {
+    draggedId,
+    targetId,
+    dropMode,
+    dropBefore,
+    menuId: menu.id
+  });
+
+  const result = applyDropOperation(menu, draggedId, targetId, dropMode, dropBefore);
+  if (!result.applied) {
+    debugLog("dnd:drop:ignored", {
+      draggedId,
+      targetId,
+      dropMode,
+      reason: result.reason
+    });
+    return;
+  }
+
+  debugLog("dnd:drop:applied", {
+    draggedId,
+    targetId,
+    dropMode,
+    afterOrder: menu.items.map(x => ({ id: x.id, level: x.level }))
+  });
+  renderList();
 });
 
 render();
