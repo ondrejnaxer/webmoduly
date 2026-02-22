@@ -616,7 +616,7 @@ input:checked+.slider:before {
     background-color: var(--event-bg);
     color: var(--event-text);
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: flex-start;
     text-align: left;
     cursor: pointer;
@@ -641,16 +641,20 @@ input:checked+.slider:before {
 }
 
 .calendar-event-card .subject {
-    display: block;
+    display: flex;
+    align-items: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem !important;
-    line-height: 1.1;
+    line-height: 1 !important;
     font-weight: 600 !important;
+    color: inherit !important;
     margin: 0 !important;
+    padding: 0 !important;
     text-align: left;
     width: 100%;
+    min-height: 100%;
 }
 
 .calendar-event-card.seg-continuation-right {
