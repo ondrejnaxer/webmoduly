@@ -1,0 +1,657 @@
+/**
+ * School Schedule App - Main Logic
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // State
+    const state = {
+        currentView: 'schedule',
+        selectedClass: '',
+        scheduleMode: 'current', // 'permanent', 'current', 'next'
+        currentDate: new Date()
+    };
+
+    // DOM Elements
+    const elements = {
+        navLinks: document.querySelectorAll('.main-nav li'),
+        views: document.querySelectorAll('.view'),
+
+        // Schedule
+        classSelect: document.getElementById('class-select'),
+        scheduleModeFilter: document.getElementById('schedule-mode-filter'),
+        scheduleModeInputs: document.querySelectorAll('input[name="schedule-mode"]'),
+
+        scheduleHeader: document.querySelector('.schedule-header'),
+        scheduleBody: document.getElementById('schedule-body'),
+
+        // Calendar
+        calendarGrid: document.getElementById('calendar-grid'),
+        eventsList: document.getElementById('events-list'),
+        calPrevBtn: document.getElementById('cal-prev'),
+        calNextBtn: document.getElementById('cal-next'),
+        calMonthYear: document.getElementById('calendar-month-year'),
+
+        // Staff
+        consultationsGrid: document.getElementById('consultations-grid'),
+        contactsGrid: document.getElementById('contacts-grid'),
+
+        // Detail Overlay
+        detailOverlay: document.getElementById('detail-overlay'),
+        closeDetailBtn: document.getElementById('close-detail'),
+        detailContent: document.getElementById('detail-content')
+    };
+
+    // Initialize
+    init();
+
+    function init() {
+        setupNavigation();
+        setupScheduleControls();
+        setupCalendarControls();
+        setupDetailOverlay();
+
+        // Load initial data
+        loadClasses();
+        renderStaff();
+
+        // Initial Render
+        renderSchedule();
+        renderCalendar();
+    }
+
+    // --- Navigation ---
+    function setupNavigation() {
+        elements.navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tab = link.dataset.tab;
+                switchView(tab);
+            });
+        });
+    }
+
+    function switchView(viewName) {
+        // Update State
+        state.currentView = viewName;
+
+        // Update Nav UI
+        elements.navLinks.forEach(link => {
+            link.classList.toggle('active', link.dataset.tab === viewName);
+        });
+
+        // Update View Display
+        elements.views.forEach(view => {
+            view.classList.toggle('active', view.id === `view-${viewName}`);
+        });
+    }
+
+    // --- Date Utilities ---
+    function getMonday(d) {
+        d = new Date(d);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(d.setDate(diff));
+    }
+
+    function addDays(date, days) {
+        const result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    function formatDate(date) {
+        return date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' });
+    }
+
+    // --- Schedule Logic ---
+    function setupScheduleControls() {
+        elements.scheduleModeInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                state.scheduleMode = e.target.value;
+                renderSchedule();
+            });
+        });
+
+        elements.classSelect.addEventListener('change', (e) => {
+            state.selectedClass = e.target.value;
+            renderSchedule();
+        });
+    }
+
+
+
+    function loadClasses() {
+        elements.classSelect.innerHTML = '<option value="">Vyberte třídu...</option>';
+        mockData.classes.forEach(cls => {
+            const option = document.createElement('option');
+            option.value = cls.id;
+            option.textContent = cls.name;
+            if (cls.id === state.selectedClass) option.selected = true;
+            elements.classSelect.appendChild(option);
+        });
+    }
+
+    function renderSchedule() {
+        if (elements.scheduleModeFilter) {
+            elements.scheduleModeFilter.style.display = state.selectedClass ? 'flex' : 'none';
+        }
+
+        // Clear Grid
+        elements.scheduleHeader.innerHTML = '';
+        elements.scheduleBody.innerHTML = '';
+
+        if (!state.selectedClass) {
+            elements.scheduleHeader.style.display = 'none';
+            elements.scheduleBody.innerHTML = '<div class="empty-schedule-msg">Vyberte třídu pro zobrazení rozvrhu.</div>';
+            return;
+        }
+
+        elements.scheduleHeader.style.display = 'grid';
+        elements.scheduleHeader.innerHTML = '<div class="time-header empty"></div>';
+
+        // Render Header (Hours)
+        mockData.hourDefinitions.forEach((hour, index) => {
+            const div = document.createElement('div');
+            div.className = 'time-header';
+            div.innerHTML = `<span class="period-num">${hour.caption}</span><span class="period-time">${hour.beginTime} - ${hour.endTime}</span>`;
+            elements.scheduleHeader.appendChild(div);
+        });
+
+        // Set grid columns dynamically
+        const cols = mockData.hourDefinitions.length; // usually 8
+        const gridTemplate = `80px repeat(${cols}, 1fr)`;
+
+        elements.scheduleHeader.style.gridTemplateColumns = gridTemplate;
+
+        // Render Days
+        const days = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek'];
+        const classData = mockData.timetables[state.selectedClass] || [];
+
+        days.forEach((dayName, dayIndex) => {
+            const row = document.createElement('div');
+            row.className = 'schedule-row';
+            row.style.gridTemplateColumns = gridTemplate;
+
+            // Day Header
+            const dayHead = document.createElement('div');
+            dayHead.className = 'day-header';
+
+            let dayLabel = dayName;
+            if (state.scheduleMode !== 'permanent') {
+                const today = new Date();
+                let monday = getMonday(today);
+                if (state.scheduleMode === 'next') monday = addDays(monday, 7);
+
+                const currentDayDate = addDays(monday, dayIndex);
+                const dateStr = currentDayDate.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' });
+                dayLabel += `<br><span class="day-date">(${dateStr})</span>`;
+            }
+
+            dayHead.innerHTML = dayLabel;
+            row.appendChild(dayHead);
+
+            // Cells
+            for (let h = 1; h <= cols; h++) { // Hours 1-8
+                const cell = document.createElement('div');
+                cell.className = 'schedule-cell';
+
+                // Find lessons for this cell
+                const lessons = classData.filter(l => l.dayIndex === dayIndex && l.hourIndex === h);
+
+                if (lessons.length > 0) {
+                    lessons.forEach(l => {
+                        let classes = 'lesson-card';
+                        if (l.atom.changed) classes += ' changed';
+                        if (l.atom.cancelled) classes += ' cancelled';
+
+                        const card = document.createElement('div');
+                        card.className = classes;
+
+                        if (l.atom.cancelled && !l.atom.subject) {
+                            card.innerHTML = '';
+                        } else {
+                            card.innerHTML = `
+                                <div class="card-top">
+                                    <span class="group">${l.atom.group && l.atom.group !== 'celá' ? l.atom.group : ''}</span>
+                                    <span class="room">${l.atom.room || ''}</span>
+                                </div>
+                                <div class="subject">${l.atom.subject || ''}</div>
+                                <div class="teacher">${l.atom.teacher || ''}</div>
+                            `;
+                        }
+
+                        card.addEventListener('click', () => showDetail(l.atom, dayName, h));
+                        cell.appendChild(card);
+                    });
+                }
+
+                row.appendChild(cell);
+            }
+
+            elements.scheduleBody.appendChild(row);
+        });
+    }
+
+    // --- Calendar Logic (Simplified) ---
+    function setupCalendarControls() {
+        // Just mock switching months for visual effect
+        elements.calPrevBtn.addEventListener('click', () => {
+            alert('Přepínání měsíců je v demu pouze vizuální.');
+        });
+        elements.calNextBtn.addEventListener('click', () => {
+            alert('Přepínání měsíců je v demu pouze vizuální.');
+        });
+    }
+
+    function renderCalendar() {
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const year = today.getFullYear();
+
+        // Days in month
+        const daysInMonth = new Date(year, currentMonth + 1, 0).getDate();
+        const firstDay = new Date(year, currentMonth, 1).getDay(); // 0=Sun
+        const startOffset = (firstDay === 0 ? 6 : firstDay - 1); // 0=Mon
+
+        elements.calendarGrid.innerHTML = '';
+
+        // Day of week headers
+        const daysOfWeek = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+        daysOfWeek.forEach(day => {
+            const headerCell = document.createElement('div');
+            headerCell.className = 'day-header time-header';
+            headerCell.style.borderBottom = '1px solid var(--border-color)';
+            headerCell.style.textTransform = 'none';
+            headerCell.textContent = day;
+            elements.calendarGrid.appendChild(headerCell);
+        });
+
+        // Empty cells before 1st
+        for (let i = 0; i < startOffset; i++) {
+            const cell = document.createElement('div');
+            // Maintain borders for empty cells to keep grid aligned
+            cell.style.borderRight = '1px solid var(--border-color)';
+            cell.style.borderBottom = '1px solid var(--border-color)';
+            elements.calendarGrid.appendChild(cell);
+        }
+
+        // Days in month iteration logic with event multiday allocation
+        const numCells = startOffset + daysInMonth; // Total cells to render up to end of month
+        // We will need to compute slots for the overlapping events
+        const calGrid = Array.from({ length: numCells }, () => ({ dateObj: null, slots: [] }));
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            calGrid[startOffset + d - 1].dateObj = new Date(year, currentMonth, d);
+        }
+
+        // Get events matching this month and sort them
+        const validEvents = mockData.events.filter(e => {
+            const evStart = new Date(e.dateFrom);
+            const evEnd = new Date(e.dateTo);
+            const monthStart = new Date(year, currentMonth, 1);
+            const monthEnd = new Date(year, currentMonth + 1, 0, 23, 59, 59);
+            return evStart <= monthEnd && evEnd >= monthStart;
+        });
+
+        validEvents.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
+
+        validEvents.forEach(evt => {
+            const dF = new Date(evt.dateFrom);
+            const dT = new Date(evt.dateTo);
+
+            let startIndex = -1;
+            let endIndex = -1;
+
+            for (let i = 0; i < numCells; i++) {
+                if (calGrid[i].dateObj) {
+                    const cDay = calGrid[i].dateObj.getDate();
+                    const cellDayStart = new Date(year, currentMonth, cDay, 0, 0, 0);
+                    const cellDayEnd = new Date(year, currentMonth, cDay, 23, 59, 59);
+
+                    if (dF <= cellDayEnd && dT >= cellDayStart) {
+                        if (startIndex === -1) startIndex = i;
+                        endIndex = i;
+                    }
+                }
+            }
+
+            if (startIndex !== -1) {
+                // Find lowest free slot horizontally
+                let slot = 0;
+                while (true) {
+                    let isFree = true;
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        if (calGrid[i].slots[slot]) {
+                            isFree = false; break;
+                        }
+                    }
+                    if (isFree) break;
+                    slot++;
+                }
+
+                // Allocate slot
+                for (let i = startIndex; i <= endIndex; i++) {
+                    calGrid[i].slots[slot] = {
+                        evt: evt,
+                        startIndex: startIndex,
+                        endIndex: endIndex
+                    };
+                }
+            }
+        });
+
+        // Finally render the day cells
+        for (let d = 1; d <= daysInMonth; d++) {
+            const cellIndex = startOffset + d - 1;
+            const cellInfo = calGrid[cellIndex];
+
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day';
+
+            if (d === today.getDate() && currentMonth === today.getMonth()) {
+                cell.className += ' today';
+            }
+
+            cell.innerHTML = `<div class="day-number">${d}</div>`;
+
+            // Draw event slots
+            const maxSlot = cellInfo.slots.length;
+            for (let s = 0; s < maxSlot; s++) {
+                const slotData = cellInfo.slots[s];
+                if (!slotData) {
+                    // empty slot
+                    const spacer = document.createElement('div');
+                    spacer.className = 'event-spacer';
+                    cell.appendChild(spacer);
+                } else {
+                    const evt = slotData.evt;
+                    const isWeekStart = (cellIndex % 7 === 0);
+                    const isPieceStart = (cellIndex === slotData.startIndex || isWeekStart);
+
+                    if (isPieceStart) {
+                        const endOfPiece = Math.min(slotData.endIndex, cellIndex + (6 - (cellIndex % 7)));
+                        const pieceLength = endOfPiece - cellIndex + 1;
+
+                        const card = document.createElement('div');
+                        let classNames = 'lesson-card calendar-event-card';
+
+                        let extraWidthStr = "";
+                        if (slotData.startIndex < cellIndex) {
+                            classNames += " card-cont-left";
+                            extraWidthStr += " + 0.5rem";
+                        }
+                        if (slotData.endIndex > endOfPiece) {
+                            classNames += " card-cont-right";
+                            extraWidthStr += " + 0.5rem";
+                        }
+
+                        if (pieceLength > 1 || extraWidthStr) {
+                            card.style.width = `calc(${pieceLength} * 100% + ${pieceLength - 1} * (1rem + 1px)${extraWidthStr})`;
+                            card.style.position = 'relative';
+                            card.style.zIndex = '10';
+                        }
+
+                        classNames += (evt.category === 'holiday') ? ' category-holiday' : '';
+                        classNames += (evt.category === 'trip') ? ' category-trip' : '';
+                        card.className = classNames;
+
+                        card.innerHTML = `<div class="subject">${evt.title}</div>`;
+
+                        card.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showEventDetail(evt);
+                        });
+
+                        cell.appendChild(card);
+                    } else {
+                        // Place a spacer to reserve vertical space, actual card floats over it
+                        const spacer = document.createElement('div');
+                        spacer.className = 'event-spacer';
+                        cell.appendChild(spacer);
+                    }
+                }
+            }
+
+            elements.calendarGrid.appendChild(cell);
+        }
+
+        // Render Events List side panel
+        elements.eventsList.innerHTML = '<h3>Nadcházející akce</h3>';
+        mockData.events.forEach(evt => {
+            const div = document.createElement('div');
+            div.className = 'event-list-item';
+            const d = new Date(evt.dateFrom).toLocaleDateString('cs-CZ');
+            div.innerHTML = `<strong>${d}</strong> - ${evt.title}`;
+            div.addEventListener('click', () => showEventDetail(evt));
+            elements.eventsList.appendChild(div);
+        });
+    }
+
+    // --- Staff Logic ---
+    function renderStaff() {
+        // Consultations
+        elements.consultationsGrid.innerHTML = '';
+        elements.contactsGrid.innerHTML = '';
+
+        mockData.staff.forEach(person => {
+            const card = createStaffCard(person, true);
+            elements.consultationsGrid.appendChild(card);
+
+            const card2 = createStaffCard(person, false);
+            elements.contactsGrid.appendChild(card2);
+        });
+    }
+
+    function createStaffCard(person, showConsultation) {
+        const div = document.createElement('div');
+        div.className = 'staff-card';
+
+        const initials = (person.firstName[0] + person.lastName[0]).toUpperCase();
+
+        div.innerHTML = `
+            <div class="staff-avatar">${initials}</div>
+            <div class="staff-info">
+                <h3>${person.title ? person.title + ' ' : ''}${person.firstName} ${person.lastName}</h3>
+                <span class="staff-role">${person.role || 'Zaměstnanec'}</span>
+                
+                <div class="staff-contact">
+                    <i class="fa-regular fa-envelope"></i>
+                    <a href="mailto:${person.email}" class="staff-email-link">${person.email}</a>
+                </div>
+                ${person.phone ? `
+                <div class="staff-contact">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>${person.phone}</span>
+                </div>` : ''}
+
+                ${showConsultation && person.consultations ? `
+                <div class="staff-consultation-section">
+                    <div class="staff-consultation-label">KONZULTACE</div>
+                    <div class="staff-consultation-value">${person.consultations}</div>
+                </div>
+                ` : ''}
+            </div>
+        `;
+        return div;
+    }
+
+    // --- Detail Overlay ---
+    function setupDetailOverlay() {
+        elements.closeDetailBtn.addEventListener('click', closeDetail);
+        elements.detailOverlay.addEventListener('click', (e) => {
+            if (e.target === elements.detailOverlay) closeDetail();
+        });
+
+        // Add Escape key support to close detail modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && elements.detailOverlay.classList.contains('active')) {
+                closeDetail();
+            }
+        });
+    }
+
+    function showDetail(atom, dayName, hourIndex) {
+        let subjectName = atom.subjectFull || atom.subject || '-';
+        let timeString = '';
+
+        if (atom.subjecttext) {
+            const parts = atom.subjecttext.split(' | ');
+            if (parts.length >= 3) {
+                subjectName = parts[0].trim() || '-';
+
+                let datePart = parts[1].trim();
+                datePart = datePart.charAt(0).toUpperCase() + datePart.slice(1);
+                const currentYear = state.currentDate ? state.currentDate.getFullYear() : new Date().getFullYear();
+
+                let timePart = parts[2].trim();
+                const timeMatch = timePart.match(/\((.*?)\)/);
+                if (timeMatch) {
+                    timePart = timeMatch[1];
+                }
+
+                timeString = `${datePart}${currentYear} @ ${timePart}`;
+            }
+        }
+
+        const groupDisplay = atom.group && atom.group !== 'celá' ? atom.group : 'Všichni';
+
+        const changeDisplay = atom.changeinfo ? `
+            <div class="detail-change-alert">
+                <div class="change-label">Změna</div>
+                <div class="change-value">${atom.changeinfo}</div>
+            </div>` : '';
+
+        const themeDisplay = atom.theme ? `
+            <div class="detail-row">
+                <span class="detail-label">Téma</span>
+                <span class="detail-value">${atom.theme}</span>
+            </div>` : '';
+
+        const content = `
+            <div class="detail-title-container">
+                <h2 class="detail-title-header">Detail rozvrhové akce</h2>
+            </div>
+
+            ${changeDisplay}
+
+            <div class="detail-row">
+                <span class="detail-label">Předmět</span>
+                <span class="detail-value">${subjectName}</span>
+            </div>
+
+            ${timeString ? `
+            <div class="detail-row">
+                <span class="detail-label">Konání</span>
+                <span class="detail-value">${timeString}</span>
+            </div>` : ''}
+
+            <div class="detail-row">
+                <span class="detail-label">Místnost</span>
+                <span class="detail-value">${atom.room || '-'}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Studijní skupina</span>
+                <span class="detail-value">${groupDisplay}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Vyučující</span>
+                <span class="detail-value">${atom.teacherFull || atom.teacher || '-'}</span>
+            </div>
+
+            ${themeDisplay}
+
+            <button id="btn-close-detail" class="btn-full btn-close-bottom">Zavřít</button>
+        `;
+
+        elements.detailContent.innerHTML = content;
+        elements.detailOverlay.classList.add('active');
+
+        // Dynamically bind close event
+        const closeBtn = document.getElementById('btn-close-detail');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDetail);
+        }
+    }
+
+    function showEventDetail(evt) {
+        const startDate = new Date(evt.dateFrom);
+        const endDate = new Date(evt.dateTo);
+
+        const isAllDay = evt.dateFrom.includes("T00:00") && evt.dateTo.includes("T23:59");
+        const isSingleDay = startDate.toDateString() === endDate.toDateString();
+
+        let dFrom, dTo;
+        if (isAllDay || (isSingleDay && evt.category === 'holiday')) {
+            // For all-day events, exclude the time component
+            dFrom = startDate.toLocaleDateString('cs-CZ');
+            dTo = endDate.toLocaleDateString('cs-CZ');
+        } else {
+            // Include time for events lasting specific hours
+            dFrom = startDate.toLocaleString('cs-CZ');
+            dTo = endDate.toLocaleString('cs-CZ');
+        }
+
+        let categoryLabel = evt.category;
+        if (evt.category === 'meeting') categoryLabel = 'Schůzka';
+        if (evt.category === 'holiday') categoryLabel = 'Prázdniny';
+        if (evt.category === 'trip') categoryLabel = 'Výlet';
+
+        let dateRows = '';
+        if (isSingleDay && isAllDay) {
+            dateRows = `
+            <div class="detail-row">
+                <span class="detail-label">Konání</span>
+                <span class="detail-value">${dFrom}</span>
+            </div>`;
+        } else {
+            dateRows = `
+            <div class="detail-row">
+                <span class="detail-label">Od</span>
+                <span class="detail-value">${dFrom}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Do</span>
+                <span class="detail-value">${dTo}</span>
+            </div>`;
+        }
+
+        const content = `
+            <div class="detail-title-container">
+                <h2 class="detail-title-header">Detail akce</h2>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Název akce</span>
+                <span class="detail-value">${evt.title}</span>
+            </div>
+
+            ${dateRows}
+
+            <div class="detail-row">
+                <span class="detail-label">Kategorie</span>
+                <span class="detail-value">${categoryLabel}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Popis akce</span>
+                <span class="detail-value" style="font-weight: 400; font-size: 0.95rem;">${evt.description}</span>
+            </div>
+
+            <button id="btn-close-event-detail" class="btn-full btn-close-bottom">Zavřít</button>
+        `;
+
+        elements.detailContent.innerHTML = content;
+        elements.detailOverlay.classList.add('active');
+
+        const closeBtn = document.getElementById('btn-close-event-detail');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDetail);
+        }
+    }
+
+    function closeDetail() {
+        elements.detailOverlay.classList.remove('active');
+    }
+});

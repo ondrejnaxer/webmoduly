@@ -1,0 +1,1132 @@
+<div id="main" class="bk-timetable-main px-sm-2 px-md-3 px-lg-4 pt-4" translate="no" style="margin-top: 90.6375px;">
+    
+        <div class="bk-timetable-class-teacher" data-testid="bk-timetable-class-teacher">
+            Třídní učitel:
+            Mgr. Angelika Vrhelová
+        </div>
+    <div class="bk-timetable-hours">
+            <div class="bk-hour-wrapper" style="position:absolute; left:2.15%; width:5.38%">
+                <div class="num">0</div>
+                <div class="hour"><span class="from">7:00</span><span> - </span><span>7:45</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:8.60%; width:5.38%">
+                <div class="num">1</div>
+                <div class="hour"><span class="from">8:00</span><span> - </span><span>8:45</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:15.05%; width:5.38%">
+                <div class="num">2</div>
+                <div class="hour"><span class="from">8:50</span><span> - </span><span>9:35</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:21.51%; width:5.38%">
+                <div class="num">3</div>
+                <div class="hour"><span class="from">9:45</span><span> - </span><span>10:30</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:27.96%; width:5.38%">
+                <div class="num">4</div>
+                <div class="hour"><span class="from">10:50</span><span> - </span><span>11:35</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:34.41%; width:5.38%">
+                <div class="num">5</div>
+                <div class="hour"><span class="from">11:40</span><span> - </span><span>12:25</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:40.86%; width:5.38%">
+                <div class="num">6</div>
+                <div class="hour"><span class="from">12:35</span><span> - </span><span>13:20</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:47.31%; width:5.38%">
+                <div class="num">7</div>
+                <div class="hour"><span class="from">13:25</span><span> - </span><span>14:10</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:53.76%; width:5.38%">
+                <div class="num">8</div>
+                <div class="hour"><span class="from">14:15</span><span> - </span><span>15:00</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:60.22%; width:5.38%">
+                <div class="num">9</div>
+                <div class="hour"><span class="from">15:05</span><span> - </span><span>15:50</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:66.67%; width:5.38%">
+                <div class="num">10</div>
+                <div class="hour"><span class="from">15:55</span><span> - </span><span>16:40</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:73.12%; width:5.38%">
+                <div class="num">11</div>
+                <div class="hour"><span class="from">16:45</span><span> - </span><span>17:30</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:79.57%; width:5.38%">
+                <div class="num">12</div>
+                <div class="hour"><span class="from">17:35</span><span> - </span><span>18:20</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:86.02%; width:5.38%">
+                <div class="num">13</div>
+                <div class="hour"><span class="from">18:25</span><span> - </span><span>19:10</span></div>
+            </div>
+            <div class="bk-hour-wrapper" style="position:absolute; left:92.47%; width:5.38%">
+                <div class="num">14</div>
+                <div class="hour"><span class="from">19:15</span><span> - </span><span>20:00</span></div>
+            </div>
+    </div>
+        <div class="d-flex flex-row bk-timetable-row" style="min-height: 138.769px;">
+            <div class="bk-timetable-day day-name">
+                <div class="bk-day-wrapper">
+                    <div>
+                        <span class="bk-day-day">po</span>
+                        <span class="bk-day-date">16.2.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bk-cell-wrapper">
+                        <div class="bk-timetable-cell" style="left: 2.15%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 8.6%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Chemie | po 16.2. | 1 (8:00 - 8:45)&quot;,&quot;teacher&quot;:&quot;Mgr. Radovana Zichová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Názvosloví iontů&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">CH</div>
+                                                        <div class="bottom"><span>Zir</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 15.05%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Mechanika | po 16.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Ing. Jana Palubjaková&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;SSO - grafická metoda, 1.vzor.příklad&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ME</div>
+                                                        <div class="bottom"><span>Plb</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 21.51%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover  pink " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Mechanika | po 16.2. | 3 (9:45 - 10:30)&quot;,&quot;teacher&quot;:&quot;Ing. Jana Palubjaková&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;SSO - grafická metoda,2.příklad&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;Přesun z 17.2., 7: ME, Palubjaková Jana, 202&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ME</div>
+                                                        <div class="bottom"><span>Plb</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 27.96%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Český jazyk a literatura | po 16.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Věra Fenclová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Diktát a jazykový rozbor&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ČJL</div>
+                                                        <div class="bottom"><span>Fen</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 34.41%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Matematika | po 16.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;PaedDr. Stanislav Pohl&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Mocniny s exponentem celočíselným v příkladech&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">M</div>
+                                                        <div class="bottom"><span>Poh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 40.86%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Matematika | po 16.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;PaedDr. Stanislav Pohl&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Odmocniny - Zavedení a základní příklady&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">M</div>
+                                                        <div class="bottom"><span>Poh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 47.31%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Anglický jazyk | po 16.2. | 7 (13:25 - 14:10)&quot;,&quot;teacher&quot;:&quot;Mgr. Angelika Vrhelová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;AJ1&quot;,&quot;theme&quot;:&quot;Prezentace - Lukostřelba&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>AJ1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">AJ</div>
+                                                        <div class="bottom"><span>Vrh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 53.76%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 60.22%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 66.67%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 73.12%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 79.57%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 86.02%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 92.47%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row bk-timetable-row" style="min-height: 156.694px;">
+            <div class="bk-timetable-day day-name">
+                <div class="bk-day-wrapper">
+                    <div>
+                        <span class="bk-day-day">út</span>
+                        <span class="bk-day-date">17.2.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bk-cell-wrapper">
+                        <div class="bk-timetable-cell" style="left: 2.15%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 8.6%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Technické kreslení | út 17.2. | 1 (8:00 - 8:45)&quot;,&quot;teacher&quot;:&quot;Ing. Vojtěch Forman&quot;,&quot;room&quot;:&quot;205&quot;,&quot;group&quot;:&quot;TK2&quot;,&quot;theme&quot;:&quot;MP - Průsek obrazců&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TK2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">205</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TK</div>
+                                                        <div class="bottom"><span>Fov</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Anglický jazyk | út 17.2. | 1 (8:00 - 8:45)&quot;,&quot;teacher&quot;:&quot;Mgr. Angelika Vrhelová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;AJ1&quot;,&quot;theme&quot;:&quot;Prezentace - Lední hokej&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>AJ1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">AJ</div>
+                                                        <div class="bottom"><span>Vrh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 15.05%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Technické kreslení | út 17.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Ing. Vojtěch Forman&quot;,&quot;room&quot;:&quot;205&quot;,&quot;group&quot;:&quot;TK2&quot;,&quot;theme&quot;:&quot;Technické zobrazování&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TK2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">205</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TK</div>
+                                                        <div class="bottom"><span>Fov</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Anglický jazyk | út 17.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Angelika Vrhelová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;AJ1&quot;,&quot;theme&quot;:&quot;Prezentace - Judo&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>AJ1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">AJ</div>
+                                                        <div class="bottom"><span>Vrh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 21.51%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover  pink " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Základy elektrotechniky | út 17.2. | 3 (9:45 - 10:30)&quot;,&quot;teacher&quot;:&quot;Ing. Miroslav Glöckner&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Řešení el.obvodů s rezistory, spojování zdrojů bapětí&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;Suplování: Glöckner Miroslav&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ZEL</div>
+                                                        <div class="bottom"><span>Glo</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 27.96%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Chemie | út 17.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Radovana Zichová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Názvosloví iontů&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">CH</div>
+                                                        <div class="bottom"><span>Zir</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 34.41%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Matematika | út 17.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;PaedDr. Stanislav Pohl&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Odmocniny - Základní věty pro počítání s odmocninami&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">M</div>
+                                                        <div class="bottom"><span>Poh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 40.86%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Společenské vědy | út 17.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;Mgr. Věra Fenclová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Česko-německé vztahy, postavení minorit, dualismus v habsburské monarchii, vzni národního státu v Německu&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">SPV</div>
+                                                        <div class="bottom"><span>Fen</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 47.31%; width: 5.38%; max-height: 231.844px;">
+
+                                                            <div class="day-item h-100">
+                                    <div class="day-item-hover  pink h-100" data-detail="{&quot;type&quot;:&quot;removed&quot;,&quot;subjecttext&quot;:&quot;út 17.2. | 7 (13:25 - 14:10)&quot;,&quot;absentinfo&quot;:&quot;&quot;,&quot;InfoAbsentName&quot;:null,&quot;removedinfo&quot;:&quot;Přesun na 16.2., 3. hod (ME, Palubjaková Jana)&quot;}">
+                                        <div class="day-flex">
+                                            <div class="top clearfix"></div>   <!--kvůli zarovnání-->
+                                            <div class="middle" style="font-size: calc(7px + 1vw);">
+                                                
+                                            </div>
+                                            <div class="bottom"></div> <!--kvůli zarovnání-->
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="bk-timetable-cell" style="left: 53.76%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 60.22%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 66.67%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 73.12%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 79.57%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 86.02%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 92.47%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row bk-timetable-row" style="min-height: 156.356px;">
+            <div class="bk-timetable-day day-name">
+                <div class="bk-day-wrapper">
+                    <div>
+                        <span class="bk-day-day">st</span>
+                        <span class="bk-day-date">18.2.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bk-cell-wrapper">
+                        <div class="bk-timetable-cell" style="left: 2.15%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 8.6%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Tělesná výchova a sport | st 18.2. | 1 (8:00 - 8:45)&quot;,&quot;teacher&quot;:&quot;Mgr. Jiří Kouba&quot;,&quot;room&quot;:&quot;TV1&quot;,&quot;group&quot;:&quot;TV1&quot;,&quot;theme&quot;:&quot;SH - basketbal - HČJ, pravidla, hra&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TV1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">TV1</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TVS</div>
+                                                        <div class="bottom"><span>Kob</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Tělesná výchova a sport | st 18.2. | 1 (8:00 - 8:45)&quot;,&quot;teacher&quot;:&quot;Mgr. Marcela Koubová&quot;,&quot;room&quot;:&quot;TV2&quot;,&quot;group&quot;:&quot;TV2&quot;,&quot;theme&quot;:&quot;SG - cvičení na hrazdě a kruzích - procvičování&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TV2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">TV2</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TVS</div>
+                                                        <div class="bottom"><span>Kba</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 15.05%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Tělesná výchova a sport | st 18.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Jiří Kouba&quot;,&quot;room&quot;:&quot;TV1&quot;,&quot;group&quot;:&quot;TV1&quot;,&quot;theme&quot;:&quot;SG - cvičení na hrazdě a kruzích - procvičení&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TV1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">TV1</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TVS</div>
+                                                        <div class="bottom"><span>Kob</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Tělesná výchova a sport | st 18.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Marcela Koubová&quot;,&quot;room&quot;:&quot;TV2&quot;,&quot;group&quot;:&quot;TV2&quot;,&quot;theme&quot;:&quot;SH - basketbal - pravidla, HČJ, hra&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TV2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">TV2</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TVS</div>
+                                                        <div class="bottom"><span>Kba</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 21.51%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Fyzika | st 18.2. | 3 (9:45 - 10:30)&quot;,&quot;teacher&quot;:&quot;Ing. Jan Hartman&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Test energie&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">F</div>
+                                                        <div class="bottom"><span>Har</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 27.96%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Výpočetní technika | st 18.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Rudolf Naxer&quot;,&quot;room&quot;:&quot;002&quot;,&quot;group&quot;:&quot;VT1&quot;,&quot;theme&quot;:&quot;Excel - procvičování, nastavení před tiskem&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>VT1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">002</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">VT</div>
+                                                        <div class="bottom"><span>Nxr</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Výpočetní technika | st 18.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Ing. Silvie Fránová&quot;,&quot;room&quot;:&quot;VT3&quot;,&quot;group&quot;:&quot;VT2&quot;,&quot;theme&quot;:&quot;Digitální technologie - Bezpečnost v digitálním prostředí - způsoby útoků na technologie, základní prvky ochrany (např. aktualizace softwaru, antivir, firewall, VPN, šifrování)&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>VT2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">VT3</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">VT</div>
+                                                        <div class="bottom"><span>Fra</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 34.41%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Výpočetní technika | st 18.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;Mgr. Rudolf Naxer&quot;,&quot;room&quot;:&quot;002&quot;,&quot;group&quot;:&quot;VT1&quot;,&quot;theme&quot;:&quot;Excel - procvičování, nastavení před tiskem&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>VT1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">002</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">VT</div>
+                                                        <div class="bottom"><span>Nxr</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Výpočetní technika | st 18.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;Ing. Silvie Fránová&quot;,&quot;room&quot;:&quot;VT3&quot;,&quot;group&quot;:&quot;VT2&quot;,&quot;theme&quot;:&quot;Digitální technologie - Bezpečnost v digitálním prostředí - způsoby útoků na technologie, základní prvky ochrany (např. aktualizace softwaru, antivir, firewall, VPN, šifrování)&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>VT2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">VT3</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">VT</div>
+                                                        <div class="bottom"><span>Fra</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 40.86%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Technické kreslení | st 18.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;Ing. Hana Šťastná&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Technické zobrazování&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TK</div>
+                                                        <div class="bottom"><span>Sta</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 47.31%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Matematika | st 18.2. | 7 (13:25 - 14:10)&quot;,&quot;teacher&quot;:&quot;PaedDr. Stanislav Pohl&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Odmocniny - Základní příklady&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">M</div>
+                                                        <div class="bottom"><span>Poh</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 53.76%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 60.22%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 66.67%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 73.12%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 79.57%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 86.02%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 92.47%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row bk-timetable-row" style="min-height: 138.769px;">
+            <div class="bk-timetable-day day-name">
+                <div class="bk-day-wrapper">
+                    <div>
+                        <span class="bk-day-day">čt</span>
+                        <span class="bk-day-date">19.2.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bk-cell-wrapper">
+                        <div class="bk-timetable-cell" style="left: 2.15%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 8.6%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover  pink " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Základy elektrotechniky | čt 19.2. | 1 (8:00 - 8:45)&quot;,&quot;teacher&quot;:&quot;Mgr. Irina Urbanová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Základní zapojení a galvanické články&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;Suplování: Urbanová Irina&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ZEL</div>
+                                                        <div class="bottom"><span>Urb</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 15.05%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover  pink " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Základy elektrotechniky | čt 19.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Pavel Zicha&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Základní zapojení a galvanické články&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;Suplování: Zicha Pavel&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ZEL</div>
+                                                        <div class="bottom"><span>Zic</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 21.51%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Český jazyk a literatura | čt 19.2. | 3 (9:45 - 10:30)&quot;,&quot;teacher&quot;:&quot;Mgr. Věra Fenclová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Aktivní poznávání různých druhů umění našeho i světového, současného i minulého, v tradiční i mediální podobě&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ČJL</div>
+                                                        <div class="bottom"><span>Fen</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 27.96%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Dějepis | čt 19.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Mgr. Dagmar Lorencová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Mezinárodní vztahy ve 20. a 30.letech&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">D</div>
+                                                        <div class="bottom"><span>Lra</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 34.41%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Společenské vědy | čt 19.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;Mgr. Věra Fenclová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Majorita a minority ve společnosti, migrace&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">SPV</div>
+                                                        <div class="bottom"><span>Fen</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 40.86%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Technické kreslení | čt 19.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;Ing. Hana Šťastná&quot;,&quot;room&quot;:&quot;205&quot;,&quot;group&quot;:&quot;TK1&quot;,&quot;theme&quot;:&quot;MP - průseky obrazců&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TK1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">205</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TK</div>
+                                                        <div class="bottom"><span>Sta</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 47.31%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Technické kreslení | čt 19.2. | 7 (13:25 - 14:10)&quot;,&quot;teacher&quot;:&quot;Ing. Hana Šťastná&quot;,&quot;room&quot;:&quot;205&quot;,&quot;group&quot;:&quot;TK1&quot;,&quot;theme&quot;:&quot;MP - průseky obrazců&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>TK1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">205</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">TK</div>
+                                                        <div class="bottom"><span>Sta</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 53.76%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 60.22%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 66.67%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 73.12%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 79.57%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 86.02%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 92.47%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+            </div>
+        </div>
+        <div class="d-flex flex-row bk-timetable-row" style="min-height: 231.844px;">
+            <div class="bk-timetable-day day-name">
+                <div class="bk-day-wrapper">
+                    <div>
+                        <span class="bk-day-day">pá</span>
+                        <span class="bk-day-date">20.2.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bk-cell-wrapper">
+                        <div class="bk-timetable-cell" style="left: 2.15%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 8.6%; width: 5.38%; max-height: 231.844px;">
+
+                                                            <div class="day-item h-100">
+                                    <div class="day-item-hover  border-spodni pink h-100" data-detail="{&quot;type&quot;:&quot;removed&quot;,&quot;subjecttext&quot;:&quot;pá 20.2. | 1 (8:00 - 8:45)&quot;,&quot;absentinfo&quot;:&quot;&quot;,&quot;InfoAbsentName&quot;:null,&quot;removedinfo&quot;:&quot;Zrušeno (AJ, Vrhelová Angelika)&quot;}">
+                                        <div class="day-flex">
+                                            <div class="top clearfix"></div>   <!--kvůli zarovnání-->
+                                            <div class="middle" style="font-size: calc(7px + 1vw);">
+                                                
+                                            </div>
+                                            <div class="bottom"></div> <!--kvůli zarovnání-->
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="bk-timetable-cell" style="left: 15.05%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Fyzika | pá 20.2. | 2 (8:50 - 9:35)&quot;,&quot;teacher&quot;:&quot;Ing. Jan Hartman&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Grafitační a tíhová síla, tíhové zrychlení na povechu Země&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">F</div>
+                                                        <div class="bottom"><span>Har</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 21.51%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover   " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Český jazyk a literatura | pá 20.2. | 3 (9:45 - 10:30)&quot;,&quot;teacher&quot;:&quot;Mgr. Věra Fenclová&quot;,&quot;room&quot;:&quot;202&quot;,&quot;group&quot;:&quot;&quot;,&quot;theme&quot;:&quot;Orientace v textu&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div></div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">202</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">ČJL</div>
+                                                        <div class="bottom"><span>Fen</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 27.96%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;DiS. Michal Mrázek&quot;,&quot;room&quot;:&quot;DAUT&quot;,&quot;group&quot;:&quot;DÍL1&quot;,&quot;theme&quot;:&quot;Jednoduchý elektronický obvod&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DAUT</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Mrz</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Roman Černý&quot;,&quot;room&quot;:&quot;DZAM&quot;,&quot;group&quot;:&quot;DÍL2&quot;,&quot;theme&quot;:&quot;Broušení&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DZAM</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Črr</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 4 (10:50 - 11:35)&quot;,&quot;teacher&quot;:&quot;Matěj Jurčík&quot;,&quot;room&quot;:&quot;DINS&quot;,&quot;group&quot;:&quot;DÍL3&quot;,&quot;theme&quot;:&quot;Revize elektrospotřebičů&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL3</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DINS</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Jur</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 34.41%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;DiS. Michal Mrázek&quot;,&quot;room&quot;:&quot;DAUT&quot;,&quot;group&quot;:&quot;DÍL1&quot;,&quot;theme&quot;:&quot;Jednoduchý elektronický obvod&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DAUT</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Mrz</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;Roman Černý&quot;,&quot;room&quot;:&quot;DZAM&quot;,&quot;group&quot;:&quot;DÍL2&quot;,&quot;theme&quot;:&quot;Broušení&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DZAM</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Črr</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 5 (11:40 - 12:25)&quot;,&quot;teacher&quot;:&quot;Matěj Jurčík&quot;,&quot;room&quot;:&quot;DINS&quot;,&quot;group&quot;:&quot;DÍL3&quot;,&quot;theme&quot;:&quot;Revize elektrospotřebičů&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL3</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DINS</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Jur</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 40.86%; width: 5.38%; max-height: 231.844px;">
+
+                                <div class="day-item" data-testid="timetable-day-item">
+
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;DiS. Michal Mrázek&quot;,&quot;room&quot;:&quot;DAUT&quot;,&quot;group&quot;:&quot;DÍL1&quot;,&quot;theme&quot;:&quot;Jednoduchý elektronický obvod&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL1</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DAUT</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Mrz</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;Roman Černý&quot;,&quot;room&quot;:&quot;DZAM&quot;,&quot;group&quot;:&quot;DÍL2&quot;,&quot;theme&quot;:&quot;Broušení&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL2</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DZAM</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Črr</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                            <div class="day-item-hover multi  " data-detail="{&quot;type&quot;:&quot;atom&quot;,&quot;subjecttext&quot;:&quot;Praxe | pá 20.2. | 6 (12:35 - 13:20)&quot;,&quot;teacher&quot;:&quot;Matěj Jurčík&quot;,&quot;room&quot;:&quot;DINS&quot;,&quot;group&quot;:&quot;DÍL3&quot;,&quot;theme&quot;:&quot;Revize elektrospotřebičů&quot;,&quot;notice&quot;:&quot;&quot;,&quot;changeinfo&quot;:&quot;&quot;,&quot;homeworks&quot;:null,&quot;absencetext&quot;:null,&quot;hasAbsent&quot;:false,&quot;absentInfoText&quot;:&quot;&quot;}">
+                                                <div class="day-flex">
+                                                    <div class="top clearfix">
+                                                        <div class="left roll-vertical top-hide" style="display: block;">
+                                                                <div>DÍL3</div>
+                                                        </div>
+                                                        <div class="right top-hide" style="display: block;">
+                                                                <div class="first">DINS</div>
+                                                                                                                                                                                                                                                                                                        </div>
+                                                    </div>
+                                                    <div class="middle  zapsano">PRX</div>
+                                                        <div class="bottom"><span>Jur</span></div>
+                                                    <div class="absence _"></div>
+                                                </div>
+                                            </div>
+                                </div>
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 47.31%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 53.76%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 60.22%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 66.67%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 73.12%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 79.57%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 86.02%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+                        <div class="bk-timetable-cell" style="left: 92.47%; width: 5.38%; max-height: 231.844px;">
+
+                                                    </div>
+            </div>
+        </div>
+</div>

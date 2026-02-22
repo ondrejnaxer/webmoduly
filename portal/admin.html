@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrace - Školní Informační Systém</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f1f5f9;
+        }
+
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-dashboard {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card h3 {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .log-viewer {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-family: monospace;
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 0.85rem;
+        }
+
+        .nav-admin {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-err {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login Screen -->
+    <div class="admin-login-container" id="login-screen">
+        <div class="login-card">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class="fa-solid fa-graduation-cap" style="font-size: 2rem; color: var(--primary-color);"></i>
+                <h2 style="margin-top: 1rem;">Administrace</h2>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Uživatelské jméno</label>
+                    <input type="text" value="admin" id="username">
+                </div>
+                <div class="form-group">
+                    <label>Heslo</label>
+                    <input type="password" value="password" id="password">
+                </div>
+                <button type="submit" class="btn-primary">Přihlásit se</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                <a href="index.html">Zpět na web</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="admin-dashboard" id="dashboard">
+        <div class="nav-admin">
+            <h2><i class="fa-solid fa-gauge-high"></i> Dashboard</h2>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span>Přihlášen: <strong>admin</strong></span>
+                <button class="btn-secondary" id="logout-btn" title="Odhlásit"><i
+                        class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>Stav databáze</h3>
+                <div class="status-badge status-ok"><i class="fa-solid fa-check"></i> Připojeno</div>
+            </div>
+            <div class="stat-card">
+                <h3>Poslední import</h3>
+                <div style="font-size: 1.2rem; font-weight: 600;">Dnes, 02:10</div>
+                <small style="color: var(--text-muted);">Automatický běh (CRON)</small>
+            </div>
+            <div class="stat-card">
+                <h3>Chybovost</h3>
+                <div class="stat-value" style="color: #22c55e;">0%</div>
+                <small>Za posledních 24h</small>
+            </div>
+        </div>
+
+        <div class="dashboard-grid" style="grid-template-columns: 1fr 2fr;">
+            <!-- Actions -->
+            <div class="stat-card">
+                <h3 style="margin-bottom: 1rem;">Ruční synchronizace</h3>
+                <div class="action-list">
+                    <div class="form-group">
+                        <label>Vyberte typ importu</label>
+                        <select id="import-type"
+                            style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <option value="timetable_permanent">Stálý rozvrh</option>
+                            <option value="timetable_actual">Aktuální rozvrh</option>
+                            <option value="events">Kalendář akcí</option>
+                            <option value="staff">Zaměstnanci</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="run-import-btn"><i class="fa-solid fa-rotate"></i> Spustit
+                        import</button>
+                </div>
+            </div>
+
+            <!-- Log Viewer -->
+            <div class="stat-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                    <h3>Logy aplikace (Tail)</h3>
+                    <select id="log-file-select" style="padding: 0.2rem; font-size: 0.8rem;">
+                        <option value="import_timetable.log">import_timetable.log</option>
+                        <option value="import_events.log">import_events.log</option>
+                        <option value="app_error.log">app_error.log</option>
+                    </select>
+                </div>
+                <div class="log-viewer" id="log-content">Načítám logy...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/mock-data.js"></script>
+    <script>
+        // Simple Admin Logic embedded or linked
+        const loginScreen = document.getElementById('login-screen');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const runImportBtn = document.getElementById('run-import-btn');
+        const logContent = document.getElementById('log-content');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Mock auth
+            loginScreen.style.display = 'none';
+            dashboard.style.display = 'block';
+            loadLogs();
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            loginScreen.style.display = 'flex';
+            dashboard.style.display = 'none';
+        });
+
+        runImportBtn.addEventListener('click', () => {
+            const type = document.getElementById('import-type').value;
+            runImportBtn.disabled = true;
+            runImportBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Spouštím...';
+
+            // Simulate API call
+            setTimeout(() => {
+                runImportBtn.disabled = false;
+                runImportBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> Spustit import';
+                const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
+                const logLine = `${now} | manual | ${type} | OK | upsert=${Math.floor(Math.random() * 100)}`;
+                appendLog(logLine);
+                alert('Import dokončen!');
+            }, 1500);
+        });
+
+        function loadLogs() {
+            // Load mock logs
+            logContent.textContent = mockData.logs.join('\n') + '\n...';
+        }
+
+        function appendLog(line) {
+            logContent.textContent += '\n' + line;
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
