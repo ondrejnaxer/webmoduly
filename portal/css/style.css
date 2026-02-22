@@ -553,13 +553,12 @@ input:checked+.slider:before {
 
 .calendar-day {
     --calendar-day-padding-x: 0.4rem;
+    --calendar-day-padding-y: 0.4rem;
     --calendar-span-step: calc(1px + (2 * var(--calendar-day-padding-x)));
     min-height: 112px;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
-    padding: 0.4rem;
-    padding-left: var(--calendar-day-padding-x);
-    padding-right: var(--calendar-day-padding-x);
+    padding: var(--calendar-day-padding-y) var(--calendar-day-padding-x);
     position: relative;
     cursor: pointer;
     display: flex;
@@ -608,6 +607,7 @@ input:checked+.slider:before {
     --event-border: #2563eb;
     --event-text: #1d4ed8;
     --event-bg: #eff6ff;
+    --event-bg-hover: #dbeafe;
     position: relative;
     z-index: 2;
     min-height: 30px;
@@ -629,7 +629,8 @@ input:checked+.slider:before {
 }
 
 .calendar-event-card:hover {
-    background-color: #dbeafe;
+    background-color: var(--event-bg-hover);
+    border-color: var(--event-border);
 }
 
 .calendar-event-card:focus-visible {
@@ -661,32 +662,37 @@ input:checked+.slider:before {
 
 .event-color-blue {
     --event-border: #2563eb;
-    --event-text: #1d4ed8;
+    --event-text: #1e40af;
     --event-bg: #eff6ff;
+    --event-bg-hover: #dbeafe;
 }
 
 .event-color-pink {
     --event-border: #db2777;
-    --event-text: #be185d;
+    --event-text: #9d174d;
     --event-bg: #fdf2f8;
+    --event-bg-hover: #fbcfe8;
 }
 
 .event-color-green {
-    --event-border: #059669;
-    --event-text: #047857;
-    --event-bg: #ecfdf5;
+    --event-border: #0f766e;
+    --event-text: #115e59;
+    --event-bg: #ecfeff;
+    --event-bg-hover: #cffafe;
 }
 
 .event-color-orange {
-    --event-border: #d97706;
-    --event-text: #b45309;
-    --event-bg: #fffbeb;
+    --event-border: #c2410c;
+    --event-text: #9a3412;
+    --event-bg: #fff7ed;
+    --event-bg-hover: #fed7aa;
 }
 
 .event-color-purple {
     --event-border: #7c3aed;
-    --event-text: #6d28d9;
+    --event-text: #5b21b6;
     --event-bg: #f5f3ff;
+    --event-bg-hover: #e9d5ff;
 }
 
 .event-spacer {
@@ -1069,8 +1075,9 @@ input:checked+.slider:before {
     }
 
     .calendar-day {
+        --calendar-day-padding-x: 0.25rem;
+        --calendar-day-padding-y: 0.25rem;
         min-height: 60px;
-        padding: 0.25rem;
     }
 }
 
