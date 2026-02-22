@@ -610,13 +610,13 @@ input:checked+.slider:before {
     --event-bg-hover: #dbeafe;
     position: relative;
     z-index: 2;
-    min-height: 30px;
+    height: 30px;
     border-radius: 6px;
     border: 1px solid var(--event-border);
     background-color: var(--event-bg);
     color: var(--event-text);
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: flex-start;
     text-align: left;
     cursor: pointer;
@@ -641,8 +641,7 @@ input:checked+.slider:before {
 }
 
 .calendar-event-card .subject {
-    display: flex;
-    align-items: center;
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -654,7 +653,6 @@ input:checked+.slider:before {
     padding: 0 !important;
     text-align: left;
     width: 100%;
-    min-height: 100%;
 }
 
 .calendar-event-card.seg-continuation-right {
@@ -703,7 +701,7 @@ input:checked+.slider:before {
 }
 
 .event-spacer {
-    min-height: 30px;
+    height: 30px;
     flex: 0 0 auto;
     width: 100%;
     min-width: 0;
@@ -1022,7 +1020,7 @@ input:checked+.slider:before {
 
     .filters-panel {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
         gap: 1rem;
     }
 
@@ -1059,7 +1057,7 @@ input:checked+.slider:before {
     }
 
     .detail-overlay {
-        align-items: stretch;
+        align-items: center;
     }
 
     .detail-sidebar {
@@ -1123,7 +1121,7 @@ input:checked+.slider:before {
     padding: 3px;
     min-height: 40px;
     height: auto;
-    align-items: stretch;
+    align-items: center;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
 }
