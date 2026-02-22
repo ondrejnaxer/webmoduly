@@ -1033,6 +1033,14 @@ const mockData = {
             category: "meeting"
         },
         {
+            id: "evt_u18",
+            title: "Maturitní maraton příprav",
+            description: "Ukázková dlouhá akce pro test vícedenního vykreslení (18 dní).",
+            dateFrom: "2026-02-02T00:00:00",
+            dateTo: "2026-02-19T23:59:59",
+            category: "project"
+        },
+        {
             id: "evt_u2",
             title: "Školní kolo olympiády v ČJ",
             description: "Soutěž v českém jazyce – školní kolo.",
