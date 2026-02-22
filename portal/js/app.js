@@ -259,30 +259,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = monthDate.getFullYear();
         elements.calMonthYear.textContent = monthDate.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
 
-        const firstDay = new Date(year, currentMonth, 1);
-        const startOffset = (firstDay.getDay() + 6) % 7;
-        const gridStartDate = addDays(firstDay, -startOffset);
+        const daysInMonth = new Date(year, currentMonth + 1, 0).getDate();
+        const startOffset = (monthDate.getDay() + 6) % 7;
+        const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+        const monthStart = new Date(year, currentMonth, 1);
+        const monthEnd = new Date(year, currentMonth, daysInMonth);
 
-        const days = Array.from({ length: 42 }, (_, index) => {
-            const date = addDays(gridStartDate, index);
+        const days = Array.from({ length: totalCells }, (_, index) => {
+            const inMonth = index >= startOffset && index < startOffset + daysInMonth;
+            const dayNumber = inMonth ? (index - startOffset + 1) : null;
+            const date = inMonth ? new Date(year, currentMonth, dayNumber) : null;
+
             return {
                 index,
                 weekIndex: Math.floor(index / 7),
                 dayIndex: index % 7,
+                inMonth,
+                dayNumber,
                 date,
-                inMonth: date.getMonth() === currentMonth,
                 multiSlots: [],
-                singleEvents: []
+                singleEvents: [],
+                itemColor: new Map()
             };
         });
 
         const dayByISO = new Map();
         days.forEach(day => {
-            dayByISO.set(day.date.toISOString().slice(0, 10), day);
+            if (day.date) {
+                dayByISO.set(day.date.toISOString().slice(0, 10), day);
+            }
         });
-
-        const gridStart = days[0].date;
-        const gridEnd = addDays(days[days.length - 1].date, 1);
 
         const normalizedEvents = mockData.events
             .map(evt => {
@@ -291,19 +297,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 return {
                     evt,
                     start,
-                    end: end < start ? start : end,
-                    isMultiDay: end > start
+                    end: end < start ? start : end
                 };
             })
-            .filter(item => item.start < gridEnd && addDays(item.end, 1) > gridStart)
+            .filter(item => item.start <= monthEnd && item.end >= monthStart)
             .sort((a, b) => a.start - b.start);
 
-        const weekLanes = Array.from({ length: 6 }, () => []);
-        normalizedEvents.forEach(item => {
-            const clippedStart = item.start < gridStart ? gridStart : item.start;
-            const clippedEnd = item.end > days[41].date ? days[41].date : item.end;
+        const weekLanes = Array.from({ length: Math.ceil(totalCells / 7) }, () => []);
 
-            if (!item.isMultiDay || isSameDay(clippedStart, clippedEnd)) {
+        normalizedEvents.forEach(item => {
+            const clippedStart = item.start < monthStart ? monthStart : item.start;
+            const clippedEnd = item.end > monthEnd ? monthEnd : item.end;
+            const isMultiDay = clippedEnd > clippedStart;
+
+            if (!isMultiDay) {
                 const day = dayByISO.get(clippedStart.toISOString().slice(0, 10));
                 if (day) {
                     day.singleEvents.push(item);
@@ -311,18 +318,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            for (let weekIndex = 0; weekIndex < 6; weekIndex++) {
-                const weekStart = days[weekIndex * 7].date;
-                const weekEnd = days[weekIndex * 7 + 6].date;
+            const startCell = startOffset + clippedStart.getDate() - 1;
+            const endCell = startOffset + clippedEnd.getDate() - 1;
+            const startWeek = Math.floor(startCell / 7);
+            const endWeek = Math.floor(endCell / 7);
 
-                if (clippedEnd < weekStart || clippedStart > weekEnd) {
-                    continue;
-                }
-
-                const segmentStart = clippedStart > weekStart ? clippedStart : weekStart;
-                const segmentEnd = clippedEnd < weekEnd ? clippedEnd : weekEnd;
-                const startCol = Math.floor((segmentStart - weekStart) / (24 * 60 * 60 * 1000));
-                const endCol = Math.floor((segmentEnd - weekStart) / (24 * 60 * 60 * 1000));
+            for (let weekIndex = startWeek; weekIndex <= endWeek; weekIndex++) {
+                const weekStartCell = weekIndex * 7;
+                const weekEndCell = weekStartCell + 6;
+                const segStartCell = Math.max(startCell, weekStartCell);
+                const segEndCell = Math.min(endCell, weekEndCell);
+                const startCol = segStartCell % 7;
+                const endCol = segEndCell % 7;
 
                 let lane = 0;
                 while (weekLanes[weekIndex][lane] && weekLanes[weekIndex][lane].some(cellTaken => cellTaken >= startCol && cellTaken <= endCol)) {
@@ -331,9 +338,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!weekLanes[weekIndex][lane]) {
                     weekLanes[weekIndex][lane] = [];
                 }
+
                 for (let col = startCol; col <= endCol; col++) {
                     weekLanes[weekIndex][lane].push(col);
-                    const day = days[weekIndex * 7 + col];
+                    const day = days[weekStartCell + col];
+                    if (!day || !day.inMonth) continue;
                     day.multiSlots[lane] = {
                         item,
                         weekIndex,
@@ -341,8 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         startCol,
                         endCol,
                         isSegmentStart: col === startCol,
-                        continuesLeft: segmentStart > item.start,
-                        continuesRight: segmentEnd < item.end
+                        continuesLeft: segStartCell > startCell,
+                        continuesRight: segEndCell < endCell
                     };
                 }
 
@@ -351,27 +360,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const colorPalette = ['blue', 'pink', 'green', 'orange', 'purple'];
         days.forEach(day => {
+            if (!day.inMonth) return;
+
             const itemsInDay = [];
-            day.multiSlots.forEach((slot, slotIndex) => {
+            day.multiSlots.forEach(slot => {
                 if (slot && slot.isSegmentStart) {
-                    itemsInDay.push({ kind: 'multi', slotIndex, ref: slot });
+                    itemsInDay.push({ ref: slot });
                 }
             });
-            day.singleEvents.forEach((eventRef, eventIndex) => {
-                itemsInDay.push({ kind: 'single', eventIndex, ref: eventRef });
+            day.singleEvents.forEach(eventRef => {
+                itemsInDay.push({ ref: eventRef });
             });
 
             const usePalette = itemsInDay.length > 1;
             itemsInDay.forEach((itemRef, idx) => {
-                itemRef.color = usePalette ? colorPalette[idx % colorPalette.length] : 'blue';
+                const color = usePalette ? colorPalette[idx % colorPalette.length] : 'blue';
+                day.itemColor.set(itemRef.ref, color);
             });
-
-            day.itemColor = new Map(itemsInDay.map(entry => [entry.ref, entry.color]));
         });
 
         elements.calendarGrid.innerHTML = '';
 
-        // Day of week headers
         const daysOfWeek = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
         daysOfWeek.forEach(day => {
             const headerCell = document.createElement('div');
@@ -388,14 +397,16 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.className = 'calendar-day';
 
             if (!dayInfo.inMonth) {
-                cell.classList.add('outside-month');
+                cell.classList.add('outside-month', 'calendar-day-empty');
+                elements.calendarGrid.appendChild(cell);
+                continue;
             }
 
             if (isSameDay(dayInfo.date, today)) {
-                cell.className += ' today';
+                cell.classList.add('today');
             }
 
-            cell.innerHTML = `<div class="day-number">${dayInfo.date.getDate()}</div>`;
+            cell.innerHTML = `<div class="day-number">${dayInfo.dayNumber}</div>`;
 
             const multiTrack = document.createElement('div');
             multiTrack.className = 'calendar-multi-track';
@@ -412,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.type = 'button';
                     card.className = 'lesson-card calendar-event-card';
                     card.classList.add(`event-color-${dayInfo.itemColor.get(slot) || 'blue'}`);
-                    card.style.width = `calc(${pieceLength * 100}% + ${(pieceLength - 1) * 1}px)`;
+                    card.style.width = `calc(${pieceLength} * 100% + ${pieceLength - 1} * var(--calendar-span-step))`;
                     if (slot.continuesLeft) card.classList.add('seg-continuation-left');
                     if (slot.continuesRight) card.classList.add('seg-continuation-right');
                     card.innerHTML = `<span class="subject">${slot.item.evt.title}</span>`;
@@ -447,7 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.calendarGrid.appendChild(cell);
         }
 
-        // Render Events List side panel
         elements.eventsList.innerHTML = '<h3>Nadcházející akce</h3>';
         mockData.events.forEach(evt => {
             const div = document.createElement('div');

@@ -552,10 +552,14 @@ input:checked+.slider:before {
 }
 
 .calendar-day {
+    --calendar-day-padding-x: 0.4rem;
+    --calendar-span-step: calc(1px + (2 * var(--calendar-day-padding-x)));
     min-height: 112px;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
     padding: 0.4rem;
+    padding-left: var(--calendar-day-padding-x);
+    padding-right: var(--calendar-day-padding-x);
     position: relative;
     cursor: pointer;
     display: flex;
@@ -575,6 +579,10 @@ input:checked+.slider:before {
 
 .calendar-day.outside-month {
     background-color: #fbfdff;
+}
+
+.calendar-day-empty {
+    cursor: default;
 }
 
 .day-number {
