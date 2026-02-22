@@ -460,7 +460,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         elements.eventsList.innerHTML = '<h3>Nadcházející akce</h3>';
-        mockData.events.forEach(evt => {
+        const now = new Date();
+        const upcomingEvents = mockData.events
+            .filter(evt => new Date(evt.dateTo) >= now)
+            .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
+            .slice(0, 10);
+
+        upcomingEvents.forEach(evt => {
             const div = document.createElement('div');
             div.className = 'event-list-item';
             const d = new Date(evt.dateFrom).toLocaleDateString('cs-CZ');
