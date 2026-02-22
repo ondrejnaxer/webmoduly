@@ -611,13 +611,16 @@ input:checked+.slider:before {
     position: relative;
     z-index: 2;
     height: 30px;
+    min-height: 30px;
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: center;
     border-radius: 6px;
     border: 1px solid var(--event-border);
     background-color: var(--event-bg);
     color: var(--event-text);
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
@@ -627,12 +630,15 @@ input:checked+.slider:before {
     box-shadow: none;
     line-height: 1;
     appearance: none;
+    transform: none;
     transition: background-color 0.18s ease, border-color 0.18s ease;
 }
 
 .calendar-event-card:hover {
     background-color: var(--event-bg-hover);
     border-color: var(--event-border);
+    transform: none;
+    box-shadow: none;
 }
 
 .calendar-event-card:focus-visible {
