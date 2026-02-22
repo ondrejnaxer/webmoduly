@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentView: 'schedule',
         selectedClass: '',
         scheduleMode: 'current', // 'permanent', 'current', 'next'
-        currentDate: new Date()
+        currentDate: new Date(),
+        calendarDate: new Date()
     };
 
     // DOM Elements
@@ -243,18 +244,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Calendar Logic (Simplified) ---
     function setupCalendarControls() {
         elements.calPrevBtn.addEventListener('click', () => {
-            state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - 1, 1);
+            state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1);
             renderCalendar();
         });
         elements.calNextBtn.addEventListener('click', () => {
-            state.currentDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 1);
+            state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1);
             renderCalendar();
         });
     }
 
     function renderCalendar() {
         const today = startOfDay(new Date());
-        const monthDate = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1);
+        const monthDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1);
         const currentMonth = monthDate.getMonth();
         const year = monthDate.getFullYear();
         elements.calMonthYear.textContent = monthDate.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
@@ -532,6 +533,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function getScheduleDayIndex(dayName) {
+        const dayMap = {
+            'Pondělí': 0,
+            'Úterý': 1,
+            'Středa': 2,
+            'Čtvrtek': 3,
+            'Pátek': 4
+        };
+        return dayMap[dayName] ?? 0;
+    }
+
+    function getScheduleReferenceDate(dayName) {
+        let monday = getMonday(new Date());
+        if (state.scheduleMode === 'next') {
+            monday = addDays(monday, 7);
+        }
+        return addDays(monday, getScheduleDayIndex(dayName));
+    }
+
     function showDetail(atom, dayName, hourIndex) {
         let subjectName = atom.subjectFull || atom.subject || '-';
         let timeString = '';
@@ -543,7 +563,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let datePart = parts[1].trim();
                 datePart = datePart.charAt(0).toUpperCase() + datePart.slice(1);
-                const currentYear = state.currentDate ? state.currentDate.getFullYear() : new Date().getFullYear();
+                const scheduleDate = getScheduleReferenceDate(dayName);
+                const currentYear = scheduleDate.getFullYear();
 
                 let timePart = parts[2].trim();
                 const timeMatch = timePart.match(/\((.*?)\)/);
