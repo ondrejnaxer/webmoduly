@@ -529,7 +529,7 @@ input:checked+.slider:before {
 /* --- Calendar View --- */
 .calendar-layout {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: minmax(0, 1fr) 350px;
     gap: 2rem;
     align-items: start;
 }
@@ -540,27 +540,29 @@ input:checked+.slider:before {
     border: 1px solid var(--border-color);
     padding: 1.5rem;
     box-shadow: var(--shadow-sm);
+    min-width: 0;
 }
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 0;
     border-top: 1px solid var(--border-color);
     border-left: 1px solid var(--border-color);
 }
 
 .calendar-day {
-    min-height: 140px;
+    min-height: 112px;
     border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
-    padding: 0.5rem;
+    padding: 0.4rem;
     position: relative;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    overflow: visible;
+    overflow: hidden;
+    min-width: 0;
 }
 
 .calendar-day:hover {
@@ -571,59 +573,121 @@ input:checked+.slider:before {
     background-color: #eff6ff;
 }
 
+.calendar-day.outside-month {
+    background-color: #fbfdff;
+}
+
 .day-number {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
+    color: #1f4672;
+    margin-bottom: 0.25rem;
+}
+
+.calendar-multi-track,
+.calendar-single-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.calendar-single-track {
+    margin-top: 0.1rem;
 }
 
 /* Custom styles for events inside calendar using lesson-card base */
 .calendar-event-card {
+    --event-border: #2563eb;
+    --event-text: #1d4ed8;
+    --event-bg: #eff6ff;
+    height: 28px;
+    min-height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--event-border);
+    background-color: var(--event-bg);
+    color: var(--event-text);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 4px;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    color: var(--primary-color);
-    transition: background 0.2s;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
     cursor: pointer;
     box-sizing: border-box;
+    padding: 0 0.5rem;
+    margin: 0;
+    min-width: 0;
+    box-shadow: none;
+    transition: background-color 0.18s ease, border-color 0.18s ease;
 }
 
-.calendar-event-card.hover {
-    background-color: #e2e8f0;
+.calendar-event-card:hover {
+    background-color: #dbeafe;
+}
+
+.calendar-event-card:focus-visible {
+    outline: 2px solid var(--event-border);
+    outline-offset: 1px;
 }
 
 .calendar-event-card .subject {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.85rem !important;
-    font-weight: 500 !important;
+    font-size: 0.8rem !important;
+    line-height: 1.2;
+    font-weight: 600 !important;
     margin: 0 !important;
-    text-align: center;
-    padding: 0 0.5rem;
+    text-align: left;
+    width: 100%;
 }
 
-/* Multi day continuation classes */
 .calendar-event-card.seg-continuation-right {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: none;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
 }
 
 .calendar-event-card.seg-continuation-left {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: none;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.event-color-blue {
+    --event-border: #2563eb;
+    --event-text: #1d4ed8;
+    --event-bg: #eff6ff;
+}
+
+.event-color-pink {
+    --event-border: #db2777;
+    --event-text: #be185d;
+    --event-bg: #fdf2f8;
+}
+
+.event-color-green {
+    --event-border: #059669;
+    --event-text: #047857;
+    --event-bg: #ecfdf5;
+}
+
+.event-color-orange {
+    --event-border: #d97706;
+    --event-text: #b45309;
+    --event-bg: #fffbeb;
+}
+
+.event-color-purple {
+    --event-border: #7c3aed;
+    --event-text: #6d28d9;
+    --event-bg: #f5f3ff;
 }
 
 .event-spacer {
-    height: 32px;
+    height: 28px;
+    min-height: 28px;
     flex: 0 0 auto;
     width: 100%;
+    min-width: 0;
+    position: relative;
+    overflow: visible;
 }
 
 .calendar-day.today .day-number {
