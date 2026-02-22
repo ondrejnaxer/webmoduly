@@ -561,7 +561,7 @@ input:checked+.slider:before {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    overflow: hidden;
+    overflow: visible;
     min-width: 0;
 }
 
@@ -600,6 +600,8 @@ input:checked+.slider:before {
     --event-border: #2563eb;
     --event-text: #1d4ed8;
     --event-bg: #eff6ff;
+    position: relative;
+    z-index: 2;
     height: 28px;
     min-height: 28px;
     border-radius: 6px;
