@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentView: 'schedule',
         selectedClass: '',
         scheduleMode: 'current', // 'permanent', 'current', 'next'
-        currentDate: new Date()
+        currentDate: new Date(),
+        calendarDate: new Date()
     };
 
     // DOM Elements
@@ -97,6 +98,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = new Date(date);
         result.setDate(result.getDate() + days);
         return result;
+    }
+
+    function startOfDay(date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function isSameDay(a, b) {
+        return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
     }
 
     function formatDate(date) {
@@ -234,28 +243,143 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Calendar Logic (Simplified) ---
     function setupCalendarControls() {
-        // Just mock switching months for visual effect
         elements.calPrevBtn.addEventListener('click', () => {
-            alert('Přepínání měsíců je v demu pouze vizuální.');
+            state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1);
+            renderCalendar();
         });
         elements.calNextBtn.addEventListener('click', () => {
-            alert('Přepínání měsíců je v demu pouze vizuální.');
+            state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1);
+            renderCalendar();
         });
     }
 
     function renderCalendar() {
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const year = today.getFullYear();
+        const today = startOfDay(new Date());
+        const monthDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth(), 1);
+        const currentMonth = monthDate.getMonth();
+        const year = monthDate.getFullYear();
+        elements.calMonthYear.textContent = monthDate.toLocaleDateString('cs-CZ', { month: 'long', year: 'numeric' });
 
-        // Days in month
         const daysInMonth = new Date(year, currentMonth + 1, 0).getDate();
-        const firstDay = new Date(year, currentMonth, 1).getDay(); // 0=Sun
-        const startOffset = (firstDay === 0 ? 6 : firstDay - 1); // 0=Mon
+        const startOffset = (monthDate.getDay() + 6) % 7;
+        const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+        const monthStart = new Date(year, currentMonth, 1);
+        const monthEnd = new Date(year, currentMonth, daysInMonth);
+
+        const days = Array.from({ length: totalCells }, (_, index) => {
+            const inMonth = index >= startOffset && index < startOffset + daysInMonth;
+            const dayNumber = inMonth ? (index - startOffset + 1) : null;
+            const date = inMonth ? new Date(year, currentMonth, dayNumber) : null;
+
+            return {
+                index,
+                weekIndex: Math.floor(index / 7),
+                dayIndex: index % 7,
+                inMonth,
+                dayNumber,
+                date,
+                multiSlots: [],
+                singleEvents: [],
+                itemColor: new Map()
+            };
+        });
+
+        const dayByISO = new Map();
+        days.forEach(day => {
+            if (day.date) {
+                dayByISO.set(day.date.toISOString().slice(0, 10), day);
+            }
+        });
+
+        const normalizedEvents = mockData.events
+            .map(evt => {
+                const start = startOfDay(new Date(evt.dateFrom));
+                const end = startOfDay(new Date(evt.dateTo));
+                return {
+                    evt,
+                    start,
+                    end: end < start ? start : end
+                };
+            })
+            .filter(item => item.start <= monthEnd && item.end >= monthStart)
+            .sort((a, b) => a.start - b.start);
+
+        const weekLanes = Array.from({ length: Math.ceil(totalCells / 7) }, () => []);
+
+        normalizedEvents.forEach(item => {
+            const clippedStart = item.start < monthStart ? monthStart : item.start;
+            const clippedEnd = item.end > monthEnd ? monthEnd : item.end;
+            const isMultiDay = clippedEnd > clippedStart;
+
+            if (!isMultiDay) {
+                const day = dayByISO.get(clippedStart.toISOString().slice(0, 10));
+                if (day) {
+                    day.singleEvents.push(item);
+                }
+                return;
+            }
+
+            const startCell = startOffset + clippedStart.getDate() - 1;
+            const endCell = startOffset + clippedEnd.getDate() - 1;
+            const startWeek = Math.floor(startCell / 7);
+            const endWeek = Math.floor(endCell / 7);
+
+            for (let weekIndex = startWeek; weekIndex <= endWeek; weekIndex++) {
+                const weekStartCell = weekIndex * 7;
+                const weekEndCell = weekStartCell + 6;
+                const segStartCell = Math.max(startCell, weekStartCell);
+                const segEndCell = Math.min(endCell, weekEndCell);
+                const startCol = segStartCell % 7;
+                const endCol = segEndCell % 7;
+
+                let lane = 0;
+                while (weekLanes[weekIndex][lane] && weekLanes[weekIndex][lane].some(cellTaken => cellTaken >= startCol && cellTaken <= endCol)) {
+                    lane++;
+                }
+                if (!weekLanes[weekIndex][lane]) {
+                    weekLanes[weekIndex][lane] = [];
+                }
+
+                for (let col = startCol; col <= endCol; col++) {
+                    weekLanes[weekIndex][lane].push(col);
+                    const day = days[weekStartCell + col];
+                    if (!day || !day.inMonth) continue;
+                    day.multiSlots[lane] = {
+                        item,
+                        weekIndex,
+                        lane,
+                        startCol,
+                        endCol,
+                        isSegmentStart: col === startCol,
+                        continuesLeft: segStartCell > startCell,
+                        continuesRight: segEndCell < endCell
+                    };
+                }
+            }
+        });
+
+        const colorPalette = ['blue', 'pink', 'green', 'orange', 'purple'];
+        const eventColorById = new Map();
+        normalizedEvents.forEach((item, index) => {
+            eventColorById.set(item.evt.id, colorPalette[index % colorPalette.length]);
+        });
+
+        days.forEach(day => {
+            if (!day.inMonth) return;
+
+            day.multiSlots.forEach(slot => {
+                if (slot && slot.isSegmentStart) {
+                    day.itemColor.set(slot, eventColorById.get(slot.item.evt.id) || 'blue');
+                }
+            });
+
+            day.singleEvents.forEach(eventRef => {
+                day.itemColor.set(eventRef, eventColorById.get(eventRef.evt.id) || 'blue');
+            });
+        });
 
         elements.calendarGrid.innerHTML = '';
 
-        // Day of week headers
         const daysOfWeek = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
         daysOfWeek.forEach(day => {
             const headerCell = document.createElement('div');
@@ -266,158 +390,81 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.calendarGrid.appendChild(headerCell);
         });
 
-        // Empty cells before 1st
-        for (let i = 0; i < startOffset; i++) {
-            const cell = document.createElement('div');
-            // Maintain borders for empty cells to keep grid aligned
-            cell.style.borderRight = '1px solid var(--border-color)';
-            cell.style.borderBottom = '1px solid var(--border-color)';
-            elements.calendarGrid.appendChild(cell);
-        }
-
-        // Days in month iteration logic with event multiday allocation
-        const numCells = startOffset + daysInMonth; // Total cells to render up to end of month
-        // We will need to compute slots for the overlapping events
-        const calGrid = Array.from({ length: numCells }, () => ({ dateObj: null, slots: [] }));
-
-        for (let d = 1; d <= daysInMonth; d++) {
-            calGrid[startOffset + d - 1].dateObj = new Date(year, currentMonth, d);
-        }
-
-        // Get events matching this month and sort them
-        const validEvents = mockData.events.filter(e => {
-            const evStart = new Date(e.dateFrom);
-            const evEnd = new Date(e.dateTo);
-            const monthStart = new Date(year, currentMonth, 1);
-            const monthEnd = new Date(year, currentMonth + 1, 0, 23, 59, 59);
-            return evStart <= monthEnd && evEnd >= monthStart;
-        });
-
-        validEvents.sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
-
-        validEvents.forEach(evt => {
-            const dF = new Date(evt.dateFrom);
-            const dT = new Date(evt.dateTo);
-
-            let startIndex = -1;
-            let endIndex = -1;
-
-            for (let i = 0; i < numCells; i++) {
-                if (calGrid[i].dateObj) {
-                    const cDay = calGrid[i].dateObj.getDate();
-                    const cellDayStart = new Date(year, currentMonth, cDay, 0, 0, 0);
-                    const cellDayEnd = new Date(year, currentMonth, cDay, 23, 59, 59);
-
-                    if (dF <= cellDayEnd && dT >= cellDayStart) {
-                        if (startIndex === -1) startIndex = i;
-                        endIndex = i;
-                    }
-                }
-            }
-
-            if (startIndex !== -1) {
-                // Find lowest free slot horizontally
-                let slot = 0;
-                while (true) {
-                    let isFree = true;
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        if (calGrid[i].slots[slot]) {
-                            isFree = false; break;
-                        }
-                    }
-                    if (isFree) break;
-                    slot++;
-                }
-
-                // Allocate slot
-                for (let i = startIndex; i <= endIndex; i++) {
-                    calGrid[i].slots[slot] = {
-                        evt: evt,
-                        startIndex: startIndex,
-                        endIndex: endIndex
-                    };
-                }
-            }
-        });
-
-        // Finally render the day cells
-        for (let d = 1; d <= daysInMonth; d++) {
-            const cellIndex = startOffset + d - 1;
-            const cellInfo = calGrid[cellIndex];
-
+        for (let i = 0; i < days.length; i++) {
+            const dayInfo = days[i];
             const cell = document.createElement('div');
             cell.className = 'calendar-day';
 
-            if (d === today.getDate() && currentMonth === today.getMonth()) {
-                cell.className += ' today';
+            if (!dayInfo.inMonth) {
+                cell.classList.add('outside-month', 'calendar-day-empty');
+                elements.calendarGrid.appendChild(cell);
+                continue;
             }
 
-            cell.innerHTML = `<div class="day-number">${d}</div>`;
+            if (isSameDay(dayInfo.date, today)) {
+                cell.classList.add('today');
+            }
 
-            // Draw event slots
-            const maxSlot = cellInfo.slots.length;
-            for (let s = 0; s < maxSlot; s++) {
-                const slotData = cellInfo.slots[s];
-                if (!slotData) {
-                    // empty slot
-                    const spacer = document.createElement('div');
-                    spacer.className = 'event-spacer';
-                    cell.appendChild(spacer);
-                } else {
-                    const evt = slotData.evt;
-                    const isWeekStart = (cellIndex % 7 === 0);
-                    const isPieceStart = (cellIndex === slotData.startIndex || isWeekStart);
+            cell.innerHTML = `<div class="day-number">${dayInfo.dayNumber}</div>`;
 
-                    if (isPieceStart) {
-                        const endOfPiece = Math.min(slotData.endIndex, cellIndex + (6 - (cellIndex % 7)));
-                        const pieceLength = endOfPiece - cellIndex + 1;
+            const multiTrack = document.createElement('div');
+            multiTrack.className = 'calendar-multi-track';
+            const maxMultiSlots = weekLanes[dayInfo.weekIndex].length;
 
-                        const card = document.createElement('div');
-                        let classNames = 'lesson-card calendar-event-card';
+            for (let lane = 0; lane < maxMultiSlots; lane++) {
+                const laneRow = document.createElement('div');
+                laneRow.className = 'event-spacer';
+                const slot = dayInfo.multiSlots[lane];
 
-                        let extraWidthStr = "";
-                        if (slotData.startIndex < cellIndex) {
-                            classNames += " card-cont-left";
-                            extraWidthStr += " + 0.5rem";
-                        }
-                        if (slotData.endIndex > endOfPiece) {
-                            classNames += " card-cont-right";
-                            extraWidthStr += " + 0.5rem";
-                        }
-
-                        if (pieceLength > 1 || extraWidthStr) {
-                            card.style.width = `calc(${pieceLength} * 100% + ${pieceLength - 1} * (1rem + 1px)${extraWidthStr})`;
-                            card.style.position = 'relative';
-                            card.style.zIndex = '10';
-                        }
-
-                        classNames += (evt.category === 'holiday') ? ' category-holiday' : '';
-                        classNames += (evt.category === 'trip') ? ' category-trip' : '';
-                        card.className = classNames;
-
-                        card.innerHTML = `<div class="subject">${evt.title}</div>`;
-
-                        card.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            showEventDetail(evt);
-                        });
-
-                        cell.appendChild(card);
-                    } else {
-                        // Place a spacer to reserve vertical space, actual card floats over it
-                        const spacer = document.createElement('div');
-                        spacer.className = 'event-spacer';
-                        cell.appendChild(spacer);
-                    }
+                if (slot && slot.isSegmentStart) {
+                    const pieceLength = slot.endCol - slot.startCol + 1;
+                    const card = document.createElement('button');
+                    card.type = 'button';
+                    card.className = 'lesson-card calendar-event-card';
+                    card.classList.add(`event-color-${dayInfo.itemColor.get(slot) || 'blue'}`);
+                    card.style.width = `calc(${pieceLength} * 100% + ${pieceLength - 1} * var(--calendar-span-step))`;
+                    if (slot.continuesLeft) card.classList.add('seg-continuation-left');
+                    if (slot.continuesRight) card.classList.add('seg-continuation-right');
+                    card.innerHTML = `<span class="subject">${slot.item.evt.title}</span>`;
+                    card.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showEventDetail(slot.item.evt);
+                    });
+                    laneRow.appendChild(card);
                 }
+
+                multiTrack.appendChild(laneRow);
             }
+
+            cell.appendChild(multiTrack);
+
+            const singleTrack = document.createElement('div');
+            singleTrack.className = 'calendar-single-track';
+            dayInfo.singleEvents.forEach(eventRef => {
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'lesson-card calendar-event-card calendar-single-event';
+                card.classList.add(`event-color-${dayInfo.itemColor.get(eventRef) || 'blue'}`);
+                card.innerHTML = `<span class="subject">${eventRef.evt.title}</span>`;
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showEventDetail(eventRef.evt);
+                });
+                singleTrack.appendChild(card);
+            });
+            cell.appendChild(singleTrack);
 
             elements.calendarGrid.appendChild(cell);
         }
 
-        // Render Events List side panel
         elements.eventsList.innerHTML = '<h3>Nadcházející akce</h3>';
-        mockData.events.forEach(evt => {
+        const now = new Date();
+        const upcomingEvents = mockData.events
+            .filter(evt => new Date(evt.dateTo) >= now)
+            .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom))
+            .slice(0, 10);
+
+        upcomingEvents.forEach(evt => {
             const div = document.createElement('div');
             div.className = 'event-list-item';
             const d = new Date(evt.dateFrom).toLocaleDateString('cs-CZ');
@@ -490,6 +537,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function getScheduleDayIndex(dayName) {
+        const dayMap = {
+            'Pondělí': 0,
+            'Úterý': 1,
+            'Středa': 2,
+            'Čtvrtek': 3,
+            'Pátek': 4
+        };
+        return dayMap[dayName] ?? 0;
+    }
+
+    function getScheduleReferenceDate(dayName) {
+        let monday = getMonday(new Date());
+        if (state.scheduleMode === 'next') {
+            monday = addDays(monday, 7);
+        }
+        return addDays(monday, getScheduleDayIndex(dayName));
+    }
+
     function showDetail(atom, dayName, hourIndex) {
         let subjectName = atom.subjectFull || atom.subject || '-';
         let timeString = '';
@@ -501,7 +567,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let datePart = parts[1].trim();
                 datePart = datePart.charAt(0).toUpperCase() + datePart.slice(1);
-                const currentYear = state.currentDate ? state.currentDate.getFullYear() : new Date().getFullYear();
+                const scheduleDate = getScheduleReferenceDate(dayName);
+                const currentYear = scheduleDate.getFullYear();
 
                 let timePart = parts[2].trim();
                 const timeMatch = timePart.match(/\((.*?)\)/);
