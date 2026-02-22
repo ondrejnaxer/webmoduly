@@ -621,10 +621,12 @@ input:checked+.slider:before {
     text-align: left;
     cursor: pointer;
     box-sizing: border-box;
-    padding: 0.2rem 0.5rem;
+    padding: 0.22rem 0.5rem;
     margin: 0;
     min-width: 0;
     box-shadow: none;
+    line-height: 1;
+    appearance: none;
     transition: background-color 0.18s ease, border-color 0.18s ease;
 }
 
@@ -639,11 +641,12 @@ input:checked+.slider:before {
 }
 
 .calendar-event-card .subject {
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem !important;
-    line-height: 1.2;
+    line-height: 1.1;
     font-weight: 600 !important;
     margin: 0 !important;
     text-align: left;
@@ -662,35 +665,35 @@ input:checked+.slider:before {
 
 .event-color-blue {
     --event-border: #2563eb;
-    --event-text: #1e40af;
+    --event-text: #2563eb;
     --event-bg: #eff6ff;
     --event-bg-hover: #dbeafe;
 }
 
 .event-color-pink {
     --event-border: #db2777;
-    --event-text: #9d174d;
+    --event-text: #db2777;
     --event-bg: #fdf2f8;
     --event-bg-hover: #fbcfe8;
 }
 
 .event-color-green {
     --event-border: #0f766e;
-    --event-text: #115e59;
+    --event-text: #0f766e;
     --event-bg: #ecfeff;
     --event-bg-hover: #cffafe;
 }
 
 .event-color-orange {
     --event-border: #c2410c;
-    --event-text: #9a3412;
+    --event-text: #c2410c;
     --event-bg: #fff7ed;
     --event-bg-hover: #fed7aa;
 }
 
 .event-color-purple {
     --event-border: #7c3aed;
-    --event-text: #5b21b6;
+    --event-text: #7c3aed;
     --event-bg: #f5f3ff;
     --event-bg-hover: #e9d5ff;
 }

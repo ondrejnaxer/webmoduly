@@ -360,23 +360,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const colorPalette = ['blue', 'pink', 'green', 'orange', 'purple'];
+        const eventColorById = new Map();
+        normalizedEvents.forEach((item, index) => {
+            eventColorById.set(item.evt.id, colorPalette[index % colorPalette.length]);
+        });
+
         days.forEach(day => {
             if (!day.inMonth) return;
 
-            const itemsInDay = [];
             day.multiSlots.forEach(slot => {
                 if (slot && slot.isSegmentStart) {
-                    itemsInDay.push({ ref: slot });
+                    day.itemColor.set(slot, eventColorById.get(slot.item.evt.id) || 'blue');
                 }
             });
-            day.singleEvents.forEach(eventRef => {
-                itemsInDay.push({ ref: eventRef });
-            });
 
-            const usePalette = itemsInDay.length > 1;
-            itemsInDay.forEach((itemRef, idx) => {
-                const color = usePalette ? colorPalette[idx % colorPalette.length] : 'blue';
-                day.itemColor.set(itemRef.ref, color);
+            day.singleEvents.forEach(eventRef => {
+                day.itemColor.set(eventRef, eventColorById.get(eventRef.evt.id) || 'blue');
             });
         });
 
